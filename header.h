@@ -5,6 +5,8 @@
 #ifndef ASSIGNMENT2_ARCHIT_HEADER_H
 #define ASSIGNMENT2_ARCHIT_HEADER_H
 
+#include <stdbool.h>
+
 typedef struct {
     float real;
     float imagine;
@@ -22,29 +24,28 @@ typedef struct{
 
 void readInput(initData* init, polynom* pol);
 
-void calcF(polynom* pol, complexNumber* z); // function changes the given number
+void calcF(polynom* pol, complexNumber* z); // function changes the given number//
 
 polynom* getDeriv(polynom* pol);//hod
-
-void clearComplexNumber(complexNumber* z);
 
 void getNextZ(complexNumber* z, polynom* pol_f, polynom* pol_f_deriv); // function changes the given number
 
 bool checkAcc(initData* init, polynom* pol, complexNumber* z);
 
-complexNumber* abs(complexNumber* z);
+//complexNumber abs(complexNumber z);//not neccesery
 
 void printResult(complexNumber* root);
 
-complexNumber* power(complexNumber* z, int power);
+complexNumber power(complexNumber z, int power);
 
-complexNumber* div(complexNumber* dividend, complexNumber* divisor);// (Dividend/Divisor) = quotient.remainder
+complexNumber div(complexNumber dividend, complexNumber divisor);// (Dividend/Divisor) = quotient.remainder hod
 
-complexNumber* mult(complexNumber* first, complexNumber* second);
+complexNumber mult(complexNumber first, complexNumber second);//hod
 
-complexNumber* add(complexNumber* first, complexNumber* second);
+complexNumber add(complexNumber first, complexNumber second);//hod
 
-complexNumber* sub(complexNumber* first, complexNumber* second);// first-second
+complexNumber sub(complexNumber first, complexNumber second);// first-second hod
 
-
+void printNumber(complexNumber z);//for debogging
+void printPolynom(polynom* pol);
 #endif //ASSIGNMENT2_ARCHIT_HEADER_H
