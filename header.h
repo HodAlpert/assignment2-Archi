@@ -22,7 +22,7 @@ typedef struct{
 
 void readInput(initData* init, polynom* pol);
 
-void f(polynom* pol, complexNumber* z); // function changes the given number
+void calcF(polynom* pol, complexNumber* z); // function changes the given number
 
 polynom* getDeriv(polynom* pol);//hod
 
@@ -36,16 +36,15 @@ complexNumber* abs(complexNumber* z);
 
 void printResult(complexNumber* root);
 
-// (Dividend/Divisor) = quotient.remainder
 complexNumber* power(complexNumber* z, int power);
 
-complexNumber* div(complexNumber* dividend, complexNumber* divisor);
+complexNumber* div(complexNumber* dividend, complexNumber* divisor);// (Dividend/Divisor) = quotient.remainder
 
 complexNumber* mult(complexNumber* first, complexNumber* second);
 
 complexNumber* add(complexNumber* first, complexNumber* second);
 
-complexNumber* sub(complexNumber* first, complexNumber* second);
+complexNumber* sub(complexNumber* first, complexNumber* second);// first-second
 
 
 #endif //ASSIGNMENT2_ARCHIT_HEADER_H

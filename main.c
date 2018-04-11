@@ -4,14 +4,21 @@
 #include "header.h"
 
 void getNextZ(complexNumber* z, polynom* pol_f, polynom* pol_f_deriv){
-    complexNumber* curr_z = calloc(1, sizeof(complexNumber));
+    complexNumber* curr_z = z;
     complexNumber* z_f = calloc(1, sizeof(complexNumber));
     complexNumber* z_f_deriv = calloc(1, sizeof(complexNumber));
-    curr_z->real = z->real;
-    curr_z->imagine = z->imagine;
+    complexNumber* quotient;
 
-    z_f = 
+    calcF(z_f, pol_f);
+    calcF(z_f_deriv, pol_f_deriv);
 
+    quotient = div(z_f, z_f_deriv);
+    clearComplexNumber(z_f);
+    clearComplexNumber(z_f_deriv);
+
+    z = sub(curr_z, quotient);
+    clearComplexNumber(curr_z);
+    clearComplexNumber(quotient);
 }
 
 polynom* getDeriv(polynom* pol){
