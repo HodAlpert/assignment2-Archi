@@ -19,22 +19,22 @@ typedef struct {
 
 typedef struct{
     float epsilon;
-    complexNumber* initial;
+    complexNumber initial;
 } initData;
 
 void readInput(initData* init, polynom* pol);
 
-void calcF(polynom* pol, complexNumber* z); // function changes the given number//
+complexNumber calcF(polynom* pol, complexNumber z);
 
 polynom* getDeriv(polynom* pol);//hod
 
-void getNextZ(complexNumber* z, polynom* pol_f, polynom* pol_f_deriv); // function changes the given number
+complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv);
 
-bool checkAcc(initData* init, polynom* pol, complexNumber* z);
+bool checkAcc(initData* init, polynom* pol, complexNumber z);
 
 //complexNumber abs(complexNumber z);//not neccesery
 
-void printResult(complexNumber* root);
+void printResult(complexNumber root);
 
 complexNumber power(complexNumber z, int power);
 
@@ -46,6 +46,6 @@ complexNumber add(complexNumber first, complexNumber second);//hod
 
 complexNumber sub(complexNumber first, complexNumber second);// first-second hod
 
-void printNumber(complexNumber z);//for debogging
+void printNumber(complexNumber z);//for debugging
 void printPolynom(polynom* pol);
 #endif //ASSIGNMENT2_ARCHIT_HEADER_H
