@@ -4,9 +4,10 @@
 
 #ifndef ASSIGNMENT2_ARCHIT_HEADER_H
 #define ASSIGNMENT2_ARCHIT_HEADER_H
+
 typedef struct {
-    float* real;
-    float* imagine;
+    float real;
+    float imagine;
 } complexNumber;
 
 typedef struct {
@@ -16,24 +17,28 @@ typedef struct {
 
 typedef struct{
     float epsilon;
-    float initial;
+    complexNumber* initial;
 } initData;
 
 void readInput(initData* init, polynom* pol);
 
-complexNumber* f(polynom* pol, complexNumber* z);
+void f(polynom* pol, complexNumber* z); // function changes the given number
 
-polynom* convertDeriv(polynom* pol);//hod
+polynom* getDeriv(polynom* pol);//hod
 
-complexNumber* getNextZ(complexNumber* z_n, polynom* pol_f, polynom* pol_f_deriv);
+void clearComplexNumber(complexNumber* z);
 
-bool checkAcc(initData* init, polynom* pol, complexNumber z_n);
+void getNextZ(complexNumber* z, polynom* pol_f, polynom* pol_f_deriv); // function changes the given number
+
+bool checkAcc(initData* init, polynom* pol, complexNumber* z);
 
 complexNumber* abs(complexNumber* z);
 
 void printResult(complexNumber* root);
 
 // (Dividend/Divisor) = quotient.remainder
+complexNumber* power(complexNumber* z, int power);
+
 complexNumber* div(complexNumber* dividend, complexNumber* divisor);
 
 complexNumber* mult(complexNumber* first, complexNumber* second);
