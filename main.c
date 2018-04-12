@@ -112,44 +112,51 @@ void readInput(initData *init, polynom *pol) {
     while((read = getline(&currentline,&len,stdin))!=-1){
         printf("%s", currentline);
         if(strstr(currentline,"epsilon")!=NULL){
-            init->epsilon = getEpxilonValue(currentline,read);
+            init->epsilon = getEpxilonValue(currentline);
         }
         else if(strstr(currentline,"order")!=NULL){
-            pol->order = getOrderValue(currentline,read);
+            pol->order = getOrderValue(currentline);
         }
         else if(strstr(currentline,"coeff")!=NULL){
-            int power = getCoeffPower(currentline);//TODO advance to =
-//            pol->coeffs[power] = getNumber(currentline,read);
+            int power = getCoeffPower(currentline);
+            char* temp=currentline;
+            for (;(*temp!='=');temp++){}
+            pol->coeffs[power] = getNumber(temp+1);
             continue;
         }
         else if(strstr(currentline,"initial")!=NULL){
-            //TODO advance to =
+            char* temp=currentline;
+            for (;(*temp!='=');temp++){}
+            init->initial= getNumber(temp+1);
             break;
-
         }
     }
     free(currentline);
 
 }
 
-double getEpxilonValue(char *line, ssize_t read) {
+double getEpxilonValue(char *line) {
     char* temp = line;
     for (;(*temp<'0')||(*temp>'9');temp++){}
     return strtod(temp,NULL);
 }
 
-int getOrderValue(char *line, ssize_t read) {
+int getOrderValue(char *line) {
     char* temp = line;
     for (;(*temp<'0')||(*temp>'9');temp++){}
     return atoi(temp);
 }
 
-int getCoeffPower(char *currentline) {
-    return atoi(currentline+6);
+int getCoeffPower(char *line) {
+    return atoi(line+6);
 }
 
-complexNumber getNumber(char *currentline, ssize_t read) {
-    complexNumber result;
+complexNumber getNumber(char *line) {
+    complexNumber result={0.0,0.0};
+    char* temp = line;
+    char* end;
+    result.real =strtod(temp,&end);
+    result.imagine = strtod(end,NULL);
     return result;
 }
 
@@ -157,6 +164,7 @@ int main(int argc, char *argv[]) {
 
     initData* init = calloc(1, sizeof(initData));  // should we allocate here?****************
     polynom* pol_f = calloc(1, sizeof(polynom)); // should we allocate here?***************
+    //TODO- getting segmentation fault because sombody did not malloced pol->coeef, guess who that may be
 
     readInput(init, pol_f); // this function will allocate memory for the polynom itself once we know the size
 //    complexNumber z = init->initial;
