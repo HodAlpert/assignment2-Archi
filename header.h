@@ -8,8 +8,8 @@
 #include <stdbool.h>
 
 typedef struct {
-    float real;
-    float imagine;
+    double real;
+    double imagine;
 } complexNumber;
 
 typedef struct {
@@ -18,7 +18,7 @@ typedef struct {
 } polynom;
 
 typedef struct{
-    float epsilon;
+    double epsilon;
     complexNumber initial;
 } initData;
 
@@ -32,13 +32,13 @@ complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv);
 
 bool checkAcc(initData* init, polynom* pol, complexNumber z);
 
-//complexNumber abs(complexNumber z);//not neccesery
+double squareAbs(complexNumber z);//not neccesery
 
 void printResult(complexNumber root);
 
 complexNumber power(complexNumber z, int power);
 
-complexNumber div(complexNumber dividend, complexNumber divisor);// (Dividend/Divisor) = quotient.remainder hod
+complexNumber divide(complexNumber dividend, complexNumber divisor);// (Dividend/Divisor) = quotient.remainder hod
 
 complexNumber mult(complexNumber first, complexNumber second);//hod
 
@@ -48,4 +48,10 @@ complexNumber sub(complexNumber first, complexNumber second);// first-second hod
 
 void printNumber(complexNumber z);//for debugging
 void printPolynom(polynom* pol);
+
+double getEpxilonValue(char* line,ssize_t read);
+
+int getOrderValue(char* currentline,ssize_t read);
+int getCoeffPower(char* currentline);
+complexNumber getNumber(char* currentline,ssize_t read);
 #endif //ASSIGNMENT2_ARCHIT_HEADER_H
