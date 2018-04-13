@@ -50,10 +50,10 @@ void printNumber(complexNumber z);//for debugging
 void printPolynom(polynom* pol);
 
 double getEpsilonValue();
-
 int getOrderValue();
-int getCoeffPower();
+int getCoeffIndex();
 complexNumber getNumber();
+int getCoeffPower();
 void arithmaticTests();
 
 #endif //ASSIGNMENT2_ARCHIT_HEADER_H
