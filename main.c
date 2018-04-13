@@ -124,12 +124,14 @@ double getEpsilonValue() {
     for (double i = 1; ( (input = fgetc(stdin)) != '\n'); ++i){
         power = power + (input-'0') * pow(10.0, -i);
     }
-    return base*pow(10, power*powerSign);
+
+    double result = base*pow(10, power*powerSign);
+    return result;
 }
 
 int getOrderValue() {
     char input;
-    int order;
+    int order = 0;
     while ( (input = fgetc(stdin)) != '='){;}
     
     input = fgetc(stdin); // proceed to the beggining of the number after space
@@ -198,13 +200,13 @@ complexNumber getNumber(){
         imagine = imagine*(-1);
         isNeg = 0;
     }
-    
+
     complexNumber result = {real , imagine};
     return result;
 }
 
 void printNumber(complexNumber z) {
-    printf("%lf %lfi\n",z.real,z.imagine);
+    printf("%lf %lfi",z.real,z.imagine);
 }
 
 void printPolynom(polynom *pol) {
@@ -223,21 +225,16 @@ void printPolynom(polynom *pol) {
 void readInput(initData *init, polynom *pol) {
     init->epsilon = 0;
     init->epsilon = getEpsilonValue();
-    printf("epsilon: %lf\n", init->epsilon);
     pol->order = getOrderValue();
-    printf("order: %d\n", pol->order);
     pol->coeffs = calloc(pol->order, sizeof(complexNumber));
 
     int coeffIndex = 0;
     for (int i = 0; i <= pol->order; ++i){
-
         coeffIndex = getCoeffIndex();
-        printf("Index: %d\n", coeffIndex);
         pol->coeffs[coeffIndex] = getNumber();
-        printNumber(pol->coeffs[coeffIndex]);
     }
+
     init->initial = getNumber();
-    printNumber(init->initial);
 }
 
 int main(int argc, char *argv[]) {
@@ -246,12 +243,16 @@ int main(int argc, char *argv[]) {
     polynom* pol_f = calloc(1, sizeof(polynom)); // should we allocate here?***************
 
     readInput(init, pol_f); // this function will allocate memory for the polynom itself once we know the size
+
+    printf("epsilon: %lf\ninitial: ", init->epsilon);
+    printNumber(init->initial);
+    printf("\norder: %d\n", pol_f->order);
+    printPolynom(pol_f);
+
     complexNumber z = init->initial;
-    printf("Reached Here1\n");
 	polynom* pol_f_deriv = getDeriv(pol_f);
 
     z = getNextZ(z, pol_f, pol_f_deriv);
-    printf("Reached Here2\n");
 	while (!checkAcc(init, pol_f, z)){
       z = getNextZ(z, pol_f, pol_f_deriv);
     }
