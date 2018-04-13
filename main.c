@@ -98,10 +98,10 @@ double getEpsilonValue() {
     double power = 0;
     double powerSign = -1;
     char input;
-    while ( (input = fgetc(stdin)) != '='){
-            input = fgetc(stdin);
-    }
+    while ( (input = fgetc(stdin)) != '='){;}
+
     input = fgetc(stdin); // proceed to the beggining of the number after space
+    
     while ( (input = fgetc(stdin)) != '.'){
         base = base*10 + (input - '0');
     }
@@ -130,9 +130,10 @@ double getEpsilonValue() {
 int getOrderValue() {
     char input;
     int order;
-    while ( (input = fgetc(stdin)) != '='){}
+    while ( (input = fgetc(stdin)) != '='){;}
     
-    fgetc(stdin); // proceed to the beggining of the number after space
+    input = fgetc(stdin); // proceed to the beggining of the number after space
+    
     while ((input = fgetc(stdin)) != '\n'){
         order = order*10 + (input-'0');
     }
@@ -142,7 +143,7 @@ int getOrderValue() {
 int getCoeffIndex(){
     char input;
     int coeffIndex = 0;
-    while ( (input = fgetc(stdin)) != ' '){}
+    while ( (input = fgetc(stdin)) != ' '){;}
     
     while ((input = fgetc(stdin)) != ' '){
         coeffIndex = coeffIndex*10 + (input-'0');
@@ -153,18 +154,38 @@ int getCoeffIndex(){
 complexNumber getNumber(){
     double real = 0;
     double imagine = 0;
+    int isNeg = 0;
     char input;
-    while ((input = fgetc(stdin)) != '=') {}
+    while ((input = fgetc(stdin)) != '=') {;}
     
-    fgetc(stdin);
+    input = fgetc(stdin); // this is a space- proceed to the beggining of the number after space
+    if ((input = fgetc(stdin)) == '-'){
+        isNeg = 1;
+        input = fgetc(stdin);
+    }
+    real = (input-'0');
+
     while ((input = fgetc(stdin)) != '.'){
         real = real*10 + (input-'0');
     }
+    if (isNeg){
+        real = real*(-1);
+        isNeg = 0;
+    }
+
     // skips '.'
     for (int i = 1; ((input = fgetc(stdin)) != ' '); ++i){
         real = real + (input-'0')*pow(10, -i);
     }
     //skips space
+    if ((input = fgetc(stdin)) == '-'){
+        isNeg = 1;
+        input = fgetc(stdin);
+        
+    }
+    imagine = (input-'0');
+
+
     while ((input = fgetc(stdin)) != '.'){
         imagine = imagine*10 + (input-'0');
     }
@@ -172,12 +193,18 @@ complexNumber getNumber(){
     for (int i = 1; ((input = fgetc(stdin)) != '\n'); ++i){
         imagine = imagine + (input-'0')*pow(10, -i);
     }
+
+    if (isNeg){
+        imagine = imagine*(-1);
+        isNeg = 0;
+    }
+    
     complexNumber result = {real , imagine};
     return result;
 }
 
 void printNumber(complexNumber z) {
-    printf("%lf+%lfi\n",z.real,z.imagine);
+    printf("%lf %lfi\n",z.real,z.imagine);
 }
 
 void printPolynom(polynom *pol) {
@@ -205,7 +232,7 @@ void readInput(initData *init, polynom *pol) {
     for (int i = 0; i <= pol->order; ++i){
 
         coeffIndex = getCoeffIndex();
-        printf("%d\n", coeffIndex);
+        printf("Index: %d\n", coeffIndex);
         pol->coeffs[coeffIndex] = getNumber();
         printNumber(pol->coeffs[coeffIndex]);
     }
