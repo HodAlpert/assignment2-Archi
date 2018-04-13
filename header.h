@@ -8,19 +8,19 @@
 #include <stdbool.h>
 
 typedef struct {
-    double real;
+    double real; 
     double imagine;
-} complexNumber;
+} complexNumber; // 16 byte = 0x10
 
 typedef struct {
     int order;
     complexNumber* coeffs;
-} polynom;
+} polynom; // 4+6=12 but! compiler adds room for padding.. so: 0x10
 
 typedef struct{
     double epsilon;
     complexNumber initial;
-} initData;
+} initData; // 16+8=24 byte = 0x18
 
 void readInput(initData* init, polynom* pol);// reading input
 double getEpsilonValue();
