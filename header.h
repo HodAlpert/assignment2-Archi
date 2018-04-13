@@ -22,38 +22,33 @@ typedef struct{
     complexNumber initial;
 } initData;
 
-void readInput(initData* init, polynom* pol);
-
-complexNumber calcF(polynom* pol, complexNumber z);
-
-polynom* getDeriv(polynom* pol);//hod
-
-complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv);
-
-bool checkAcc(initData* init, polynom* pol, complexNumber z);
-
-double squareAbs(complexNumber z);//not neccesery
-
-void printResult(complexNumber root);
-
-complexNumber power(complexNumber z, int power);
-
-complexNumber divide(complexNumber dividend, complexNumber divisor);// (Dividend/Divisor) = quotient.remainder hod
-
-complexNumber mult(complexNumber first, complexNumber second);//hod
-
-complexNumber add(complexNumber first, complexNumber second);//hod
-
-complexNumber sub(complexNumber first, complexNumber second);// first-second hod
-
-void printNumber(complexNumber z);//for debugging
-void printPolynom(polynom* pol);
-
+void readInput(initData* init, polynom* pol);// reading input
 double getEpsilonValue();
 int getOrderValue();
 int getCoeffIndex();
 complexNumber getNumber();
+
+complexNumber calcF(polynom* pol, complexNumber z);
+
+polynom* getDeriv(polynom* pol);
+
+complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv);
+
+bool checkAcc(initData* init, polynom* pol, complexNumber z); //checking the root
+double squareAbs(complexNumber z);//?? not neccesery ??
+
+//arithmetic operations
+complexNumber power(complexNumber z, int power);
+complexNumber divide(complexNumber dividend, complexNumber divisor);// (Dividend/Divisor) = quotient.remainder hod
+complexNumber mult(complexNumber first, complexNumber second);
+complexNumber add(complexNumber first, complexNumber second);
+complexNumber sub(complexNumber first, complexNumber second);
+
+// for debugging
+void printNumber(complexNumber z);
+void printPolynom(polynom* pol);
 int getCoeffPower();
 void arithmaticTests();
+
 
 #endif //ASSIGNMENT2_ARCHIT_HEADER_H

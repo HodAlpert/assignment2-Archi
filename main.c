@@ -243,19 +243,21 @@ int main(int argc, char *argv[]) {
 
     readInput(init, pol_f); // this function will allocate memory for the polynom itself once we know the size
 
-    printf("epsilon: %lf\ninitial: ", init->epsilon);
-    printNumber(init->initial);
-    printf("\norder: %d\n", pol_f->order);
-    printPolynom(pol_f);
+    // printf("epsilon: %lf\ninitial: ", init->epsilon);
+    // printNumber(init->initial);
+    // printf("\norder: %d\n", pol_f->order);
+    // printPolynom(pol_f);
 
     complexNumber z = init->initial;
 	polynom* pol_f_deriv = getDeriv(pol_f);
 
+    //printPolynom(pol_f_deriv);
+
     z = getNextZ(z, pol_f, pol_f_deriv);
 	while (!checkAcc(init, pol_f, z)){
-      z = getNextZ(z, pol_f, pol_f_deriv);
+        z = getNextZ(z, pol_f, pol_f_deriv);
     }
-
-    //printResult(z);
+    // print the result
+    printNumber(z);
 }
 
