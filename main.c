@@ -4,6 +4,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 #include "header.h"
 
 complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv){
@@ -56,16 +57,6 @@ complexNumber divide(complexNumber dividend, complexNumber divisor) {
     return result;
 }
 
-complexNumber calcF(polynom *pol, complexNumber z) {
-    complexNumber result={0.0,0.0};
-    for(int i = 0; i <= pol->order; i++){
-        complexNumber xPowerI = power(z,i);
-        complexNumber ithElement = mult(xPowerI,pol->coeffs[i]);
-        result = add(result,ithElement);
-    }
-    return result;
-}
-
 complexNumber power(complexNumber z, int power) {//assume power>=0
     if (power == 0) {
         complexNumber z = {1.0, 0.0};
@@ -78,6 +69,116 @@ complexNumber power(complexNumber z, int power) {//assume power>=0
     }
     return result;
 
+}
+
+complexNumber calcF(polynom *pol, complexNumber z) {
+    complexNumber result={0.0,0.0};
+    for(int i = 0; i <= pol->order; i++){
+        complexNumber xPowerI = power(z,i);
+        complexNumber element_i = mult(xPowerI,pol->coeffs[i]);
+        result = add(result,element_i);
+    }
+    return result;
+}
+
+// int getCoeffPower(char *line) {
+//     return atoi(line+6);
+// }
+
+double getEpsilonValue() {
+    double base;
+    double power;
+    int powerSign = -1;
+    char input;
+    while ( (input = fgetc(stdin)) != '='){
+            input = fgetc(stdin);
+    }
+    fgetc(stdin); // proceed to the beggining of the number after space
+    while ((input = fgetc(stdin) != '.')){
+        base = base*10 + input;
+    }
+    // skips '.'
+    for (int i = 1; ((input = fgetc(stdin)) != 'e'); ++i){
+        base = base + input*pow(10, -i);
+    }
+    //skips 'e'
+    if ( (input = fgetc(stdin)) != '-'){
+        // here should come minus, otherwise the power is positive and we stepped into the number..
+        printf("The power is positive\n");
+        powerSign = 1;
+        power = input;
+    }
+
+    while ((input = fgetc(stdin) != '.')){
+        power = power*10 + input;
+    }
+    // skips '.'
+    for (int i = 1; ((input = fgetc(stdin)) != '\n'); ++i){
+        power = power + input*pow(10, -i);
+    }
+    return pow(base, power*powerSign);
+}
+
+int getOrderValue() {
+    char input;
+    int order;
+    while ( (input = fgetc(stdin)) != '='){
+            input = fgetc(stdin);
+    }
+    fgetc(stdin); // proceed to the beggining of the number after space
+    while ((input = fgetc(stdin) != '\n')){
+        order = order*10 + input;
+    }
+    return order;
+}
+
+
+complexNumber getNumber(){
+    double real;
+    double imagine;
+    char input;
+    while ((input = fgetc(stdin)) != '=') {
+        input = fgetc(stdin);
+    }
+    fgetc(stdin);
+    while ((input = fgetc(stdin) != '.')){
+        real = real*10 + input;
+    }
+    // skips '.'
+    for (int i = 1; ((input = fgetc(stdin)) != ' '); ++i){
+        real = real + input*pow(10, -i);
+    }
+    //skips space
+    while ((input = fgetc(stdin) != '.')){
+        imagine = imagine*10 + input;
+    }
+    // skips '.'
+    for (int i = 1; ((input = fgetc(stdin)) != '\n'); ++i){
+        imagine = imagine + input*pow(10, -i);
+    }
+    complexNumber result = {real , imagine};
+    return result;
+}
+void readInput1(initData *init, polynom *pol) {
+    char input;
+    init->epsilon = 0;
+    while ((input = fgetc(stdin)) != '\0') {
+        init->epsilon = getEpsilonValue();
+        pol->order = getOrderValue();
+        pol->coeffs = calloc(pol->order, sizeof(complexNumber));
+        
+        int order = 0;
+        for (int i = 0; i <= pol->order; ++i){
+            while ((input = fgetc(stdin)) != ' ') {
+                input = fgetc(stdin);
+            }
+            order = input;
+            // proceed after '='' to the number
+            pol->coeffs[order] = getNumber();
+        }
+        init->initial = getNumber();
+
+    }
 }
 
 void printNumber(complexNumber z) {
@@ -102,63 +203,36 @@ double squareAbs(complexNumber z) {
 }
 
 bool checkAcc(initData *init, polynom *pol, complexNumber z) {
-    return squareAbs(calcF(pol,z))<init->epsilon*init->epsilon;
+    return ( squareAbs(calcF(pol,z)) < (init->epsilon*init->epsilon) );
 }
 
-void readInput(initData *init, polynom *pol) {
-    char* currentline = NULL;
-    size_t len=0;
-    ssize_t read;
-    while((read = getline(&currentline,&len,stdin))!=-1){
-        printf("%s", currentline);
-        if(strstr(currentline,"epsilon")!=NULL){
-            init->epsilon = getEpxilonValue(currentline);
-        }
-        else if(strstr(currentline,"order")!=NULL){
-            pol->order = getOrderValue(currentline);
-        }
-        else if(strstr(currentline,"coeff")!=NULL){
-            int power = getCoeffPower(currentline);
-            char* temp=currentline;
-            for (;(*temp!='=');temp++){}
-            pol->coeffs[power] = getNumber(temp+1);
-            continue;
-        }
-        else if(strstr(currentline,"initial")!=NULL){
-            char* temp=currentline;
-            for (;(*temp!='=');temp++){}
-            init->initial= getNumber(temp+1);
-            break;
-        }
-    }
-    free(currentline);
+// void readInput(initData *init, polynom *pol) {
+//     char* currentline = NULL;
+//     size_t len=0;
+//     size_t read;
+//     while((read = getline(&currentline, &len, stdin))!=-1){
+//         //printf("%s", currentline);
+//         else if(strstr(currentline,"order")!=NULL){
+//             pol->order = getOrderValue(currentline);
+//             pol->coeffs = calloc(pol->order, sizeof(complexNumber));
+//         }
+//         else if(strstr(currentline,"coeff")!=NULL){
+//             int power = getCoeffPower(currentline);
+//             char* temp=currentline;
+//             for (;(*temp!='=');temp++){}
+//             pol->coeffs[power] = getNumber(temp+1);
+//             continue;
+//         }
+//         else if(strstr(currentline,"initial")!=NULL){
+//             char* temp=currentline;
+//             for (;(*temp!='=');temp++){}
+//             init->initial= getNumber(temp+1);
+//             break;
+//         }
+//     }
+//     free(currentline);
 
-}
-
-double getEpxilonValue(char *line) {
-    char* temp = line;
-    for (;(*temp<'0')||(*temp>'9');temp++){}
-    return strtod(temp,NULL);
-}
-
-int getOrderValue(char *line) {
-    char* temp = line;
-    for (;(*temp<'0')||(*temp>'9');temp++){}
-    return atoi(temp);
-}
-
-int getCoeffPower(char *line) {
-    return atoi(line+6);
-}
-
-complexNumber getNumber(char *line) {
-    complexNumber result={0.0,0.0};
-    char* temp = line;
-    char* end;
-    result.real =strtod(temp,&end);
-    result.imagine = strtod(end,NULL);
-    return result;
-}
+// }
 
 int main(int argc, char *argv[]) {
 
@@ -167,16 +241,16 @@ int main(int argc, char *argv[]) {
     //TODO- getting segmentation fault because sombody did not malloced pol->coeef, guess who that may be
 
     readInput(init, pol_f); // this function will allocate memory for the polynom itself once we know the size
-//    complexNumber z = init->initial;
-//
-//	polynom* pol_f_deriv = getDeriv(pol_f);
-//
-//    z = getNextZ(z, pol_f, pol_f_deriv);
-//
-//	while (!checkAcc(init, pol_f, z)){
-//       z = getNextZ(z, pol_f, pol_f_deriv);
-//    }
-//
-//    printResult(z);
+    complexNumber z = init->initial;
+
+	polynom* pol_f_deriv = getDeriv(pol_f);
+
+    z = getNextZ(z, pol_f, pol_f_deriv);
+    printf("Reached Here\n");
+	while (!checkAcc(init, pol_f, z)){
+      z = getNextZ(z, pol_f, pol_f_deriv);
+    }
+
+    //printResult(z);
 }
 

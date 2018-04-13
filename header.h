@@ -49,9 +49,9 @@ complexNumber sub(complexNumber first, complexNumber second);// first-second hod
 void printNumber(complexNumber z);//for debugging
 void printPolynom(polynom* pol);
 
-double getEpxilonValue(char* line);
+double getEpsilonValue();
 
-int getOrderValue(char* currentline);
-int getCoeffPower(char* currentline);
-complexNumber getNumber(char* currentline);
+int getOrderValue();
+int getCoeffPower();
+complexNumber getNumber();
 #endif //ASSIGNMENT2_ARCHIT_HEADER_H
