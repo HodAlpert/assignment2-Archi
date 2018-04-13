@@ -8,7 +8,7 @@
 #include "header.h"
 
 complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv){
-   complexNumber curr_z = z;    
+   complexNumber curr_z = z;
    complexNumber z_f = calcF(pol_f,z);
    complexNumber z_f_deriv = calcF(pol_f_deriv,z);
    complexNumber quotient = divide(z_f, z_f_deriv);
@@ -21,8 +21,8 @@ polynom* getDeriv(polynom* pol){
     newPolynom->coeffs = calloc((size_t)pol->order, sizeof(complexNumber));
     newPolynom->order = pol->order-1;
     for (int i = 0; i < pol->order; i++){
-        newPolynom->coeffs[i].real = pol->coeffs[i].real*i;
-        newPolynom->coeffs[i].imagine = pol->coeffs[i].imagine*i;
+        newPolynom->coeffs[i].real = pol->coeffs[i+1].real*(i+1);
+        newPolynom->coeffs[i].imagine = pol->coeffs[i+1].imagine*(i+1);
     }
     return newPolynom;
 }
@@ -64,8 +64,8 @@ complexNumber power(complexNumber z, int power) {//assume power>=0
     }
 
     complexNumber result={z.real,z.imagine};
-    for (int i=0;i<power;i++){
-        result = mult(result,result);
+    for (int i=0;i<power-1;i++){
+        result = mult(result,z);
     }
     return result;
 
@@ -166,7 +166,7 @@ void readInput1(initData *init, polynom *pol) {
         init->epsilon = getEpsilonValue();
         pol->order = getOrderValue();
         pol->coeffs = calloc(pol->order, sizeof(complexNumber));
-        
+
         int order = 0;
         for (int i = 0; i <= pol->order; ++i){
             while ((input = fgetc(stdin)) != ' ') {
@@ -238,7 +238,6 @@ int main(int argc, char *argv[]) {
 
     initData* init = calloc(1, sizeof(initData));  // should we allocate here?****************
     polynom* pol_f = calloc(1, sizeof(polynom)); // should we allocate here?***************
-    //TODO- getting segmentation fault because sombody did not malloced pol->coeef, guess who that may be
 
     readInput(init, pol_f); // this function will allocate memory for the polynom itself once we know the size
     complexNumber z = init->initial;

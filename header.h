@@ -54,4 +54,6 @@ double getEpsilonValue();
 int getOrderValue();
 int getCoeffPower();
 complexNumber getNumber();
+void arithmaticTests();
+
 #endif //ASSIGNMENT2_ARCHIT_HEADER_H
