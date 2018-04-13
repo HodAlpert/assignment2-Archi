@@ -226,14 +226,13 @@ void readInput(initData *init, polynom *pol) {
     init->epsilon = 0;
     init->epsilon = getEpsilonValue();
     pol->order = getOrderValue();
-    pol->coeffs = calloc(pol->order, sizeof(complexNumber));
+    pol->coeffs = calloc(pol->order+1, sizeof(complexNumber));
 
     int coeffIndex = 0;
     for (int i = 0; i <= pol->order; ++i){
         coeffIndex = getCoeffIndex();
         pol->coeffs[coeffIndex] = getNumber();
     }
-
     init->initial = getNumber();
 }
 
