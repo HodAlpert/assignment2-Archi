@@ -75,7 +75,7 @@ double squareAbs(complexNumber z) {
     return z.real*z.real + z.imagine *z.imagine;
 }
 
-bool checkAcc(initData *init, polynom *pol, complexNumber z) {
+int checkAcc(initData *init, polynom *pol, complexNumber z) {
     return ( squareAbs(calcF(pol,z)) < (init->epsilon*init->epsilon) );
 }
 
