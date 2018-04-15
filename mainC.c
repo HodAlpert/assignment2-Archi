@@ -76,7 +76,7 @@ double squareAbs(complexNumber z) {
 }
 
 int checkAcc(initData *init, polynom *pol, complexNumber z) {
-    return ( squareAbs(calcF(pol,z)) < (init->epsilon*init->epsilon) );
+    return ( squareAbs(calcF(pol,z)) < (init->epsilon) );
 }
 
 complexNumber calcF(polynom *pol, complexNumber z) {

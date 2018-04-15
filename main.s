@@ -17,6 +17,7 @@ section .text
     extern getNextZ
     extern checkAcc
     extern printNumber
+    extern calcF
 
 main:
 
@@ -74,16 +75,38 @@ main:
     movq qword [rbp-0x8],xmm1 ;nextZ.real
     movq qword [rbp-0x10], xmm0 ;nextZ.imagine
 
+
+    mov rdi, [rbp-0x20]
+    ;calcF(pol_f*, z) - z is already in xmm0 and xmm1
+    call calcF
+	movq qword [rbp-0x30],xmm1 ;f(z).real
+    movq qword [rbp-0x38], xmm0 ;f(z).imagine
+
+    finit
+    fld tword [rbp-0x30] ;load real
+    fld st0 ;load real again
+    fmul ; real^2
+    fld tword [rbp-0x38] ;load imagine
+    fld st0 ;laod imagine again
+    fmul ;imagine^2
+    fadd ; (imagine^2 + real^2)
+    fsqrt ; ||z||
+    mov rax, qword [rbp-0x28]
+    fld tword [rax] ; load epsilon
+    fcomi
+    jle .loop
+
+
     ;checkAcc(init*, pol_f*, z) newZ is already in xmm0 and xmm1
-    mov rdi, qword [rbp-0x28]              
-    mov rsi, qword [rbp-0x20]              
-    mov rax, 2
-    call checkAcc
+    ; mov rdi, qword [rbp-0x28]              
+    ; mov rsi, qword [rbp-0x20]              
+    ; mov rax, 2
+    ; call checkAcc
     
-    ;test operation sets ZF to 1 when the result of the AND operation is 0
-    ;Ergo, when rax=0 ZF is set to 1 and we jump to the loop. If rax is 1 then we finished.
-    test rax, rax 
-    je .loop                
+    ; ;test operation sets ZF to 1 when the result of the AND operation is 0
+    ; ;Ergo, when rax=0 ZF is set to 1 and we jump to the loop. If rax is 1 then we finished.
+    ; test rax, rax 
+    ; je .loop                
    
     movsd xmm1, qword [rbp-0x8] 
     movsd xmm0, qword [rbp-0x10]
