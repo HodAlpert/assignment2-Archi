@@ -57,23 +57,23 @@ complexNumber divide(complexNumber dividend, complexNumber divisor) {
     return result;
 }
 
-complexNumber power(complexNumber z, int power) {//assume power>=0
-    if (power == 0) {
-        complexNumber z = {1.0, 0.0};
-        return z;
-    }
+//complexNumber power(complexNumber z, int power) {//assume power>=0
+//    if (power == 0) {
+//        complexNumber z = {1.0, 0.0};
+//        return z;
+//    }
+//
+//    complexNumber result={z.real,z.imagine};
+//    for (int i=0;i<power-1;i++){
+//        result = mult(result,z);
+//    }
+//    return result;
+//
+//}
 
-    complexNumber result={z.real,z.imagine};
-    for (int i=0;i<power-1;i++){
-        result = mult(result,z);
-    }
-    return result;
-
-}
-
-long double squareAbs(complexNumber z) {
-    return z.real*z.real + z.imagine *z.imagine;
-}
+//long double squareAbs(complexNumber z) {
+//    return z.real*z.real + z.imagine *z.imagine;
+//}
 
 int checkAcc(initData *init, polynom *pol, complexNumber z) {
     return ( squareAbs(calcF(pol,z)) < (init->epsilon) );
@@ -165,6 +165,10 @@ void readInput(initData *init, polynom *pol) {
 }
 
 int main(int argc, char *argv[]) {
+    complexNumber toPower = {5.2,3.5};
+    complexNumber powerAns = power(toPower,2);
+    printNumber(powerAns);
+//    assert(powerAns.real==8.0&&powerAns.imagine==6.0);
 
 //    initData* init = calloc(1, sizeof(initData));
 //    polynom* pol_f = calloc(1, sizeof(polynom));
@@ -186,7 +190,7 @@ int main(int argc, char *argv[]) {
 //        z = getNextZ(z, pol_f, pol_f_deriv);
 //    }
 //    // print the result
-////    printNumber(z);
+//    printNumber(z);
 //    printf("root = %Le %Le",z.real
 //    ,z.imagine);
 }

@@ -35,10 +35,10 @@ polynom* getDeriv(polynom* pol);
 complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv);
 
 int checkAcc(initData* init, polynom* pol, complexNumber z); //checking the root
-long double squareAbs(complexNumber z);//?? not neccesery ??
+extern long double squareAbs(complexNumber z);//?? not neccesery ??
 
 //arithmetic operations
-complexNumber power(complexNumber z, int power);
+extern complexNumber power(complexNumber z, int power);
 complexNumber divide(complexNumber dividend, complexNumber divisor);// (Dividend/Divisor) = quotient.remainder hod
 extern complexNumber mult(complexNumber first, complexNumber second);
 extern complexNumber sum(complexNumber first, complexNumber second);

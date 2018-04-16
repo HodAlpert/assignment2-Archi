@@ -10,6 +10,8 @@ section .bss
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 section .text
+    global power
+    global squareAbs
     global sum
     global subtract
     global mult
@@ -170,7 +172,7 @@ subtract:
     
 sum:
     enter 0x20,0
-     ; [rbp-0x20]=result.real
+    ; [rbp-0x20]=result.real
     ; [rbp-0x10]=result.img
     finit
     fld Tword [rbp+0x30]        ; loading second.real
@@ -188,8 +190,58 @@ sum:
     leave
     ret
     
+squareAbs:
+    enter 0x0,0
+    finit
+    fld Tword [rbp+0x10]
+    fld Tword [rbp+0x10]
+    fmulp
+    fld Tword [rbp+0x20]
+    fld Tword [rbp+0x20]
+    fmulp
+    faddp
+    leave
+    ret
     
-    
+power:
+    enter 0x50,0
+    ; [rbp-0x4] = power
+    ; [rbp-0x30]=result.real
+    ; [rbp-0x20]=result.img
+    finit
+    mov dword [rbp-0x4], esi     ; power<-[rbp-0x4]
+    mov qword [rbp-0xb], rdi     ; saving the return pointer
+    cmp dword esi,0
+    je .returnone
+    fld Tword [rbp+0x10]
+    fstp Tword [rbp-0x30]
+    fld Tword [rbp+0x20]
+    fstp Tword [rbp-0x20]           ;loading z
+    movapd xmm0, Oword [rbp-0x30]; xmm0=result.real
+    movapd xmm1, Oword [rbp-0x20]; xmm1 = result.img
+    movapd Oword [rbp-0x50],xmm0 ;moving result.real to call mult
+    movapd Oword [rbp-0x40],xmm1 ; moving result.img to call mult
+    mov ecx, esi
+    sub ecx,1                       ;power = power-1 (for the loop)
+    lea rdi, [rbp-0x50]     ; giving rdi return address for mult
+    .myloop:
+        call mult                     ; result = mult(result,z)
+        loop .myloop
+        jmp .return
+            
+    .returnone:
+        fld1
+        fstp Tword [rbp-0x50]   ; result.real=1
+        fldz
+        fstp Tword [rbp-0x40]   ; result.img = 0
+    .return:
+        movapd xmm0, Oword [rbp-0x50]; xmm0=result.real
+        movapd xmm1, Oword [rbp-0x40]; xmm1 = result.img
+        mov rdi, qword [rbp-0xb]     ; giving rdi the return address
+        movapd Oword [rdi],xmm0      ;returning result.real
+        movapd Oword [rdi+0x10],xmm1 ; returning result.img
+        leave
+        ret
     
     
     
