@@ -22,7 +22,7 @@ void arithmaticTests(){
     complexNumber minux3plus2i = {-3.0,2.0};
     complexNumber multans2= mult(minux1,minux3plus2i);
     complexNumber numbertoAbs = {1.0,1.0};
-    double absoluteans = squareAbs(numbertoAbs);
+    long double absoluteans = squareAbs(numbertoAbs);
     assert(absoluteans==2.0);
     complexNumber toPower = {3.0,1.0};
     complexNumber powerAns = power(toPower,2);
