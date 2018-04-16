@@ -41,8 +41,8 @@ long double squareAbs(complexNumber z);//?? not neccesery ??
 complexNumber power(complexNumber z, int power);
 complexNumber divide(complexNumber dividend, complexNumber divisor);// (Dividend/Divisor) = quotient.remainder hod
 extern complexNumber mult(complexNumber first, complexNumber second);
-complexNumber add(complexNumber first, complexNumber second);
-complexNumber subtract(complexNumber first, complexNumber second);
+extern complexNumber sum(complexNumber first, complexNumber second);
+extern complexNumber subtract(complexNumber first, complexNumber second);
 
 // for debugging
 void printNumber(complexNumber z);

@@ -10,6 +10,8 @@ section .bss
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 section .text
+    global sum
+    global subtract
     global mult
     global main
     extern calloc
@@ -145,6 +147,46 @@ mult:
    movapd Oword [rdi+0x10],xmm1 ; returning result.img
    leave
    ret
+
+subtract:
+    enter 0x20,0
+     ; [rbp-0x20]=result.real
+    ; [rbp-0x10]=result.img
+    finit
+    fld Tword [rbp+0x30]        ; loading second.real
+    fld Tword [rbp+0x10]        ; loading first.real
+    fsubrp                      ; first.real-second.real
+    fstp Tword [rbp-0x20]        ; storing the real value
+    fld Tword [rbp+0x40]        ; loading second.img
+    fld Tword [rbp+0x20]        ; loading first.img
+    fsubrp                      ; first.imagine-second.imagine
+    fstp Tword [rbp-0x10]        ; storing the img value
+    movapd xmm0, Oword [rbp-0x20]; xmm0=result.real
+    movapd xmm1, Oword [rbp-0x10]; xmm1 = result.img
+    movapd Oword [rdi],xmm0      ;returning result.real
+    movapd Oword [rdi+0x10],xmm1 ; returning result.img
+    leave
+    ret
+    
+sum:
+    enter 0x20,0
+     ; [rbp-0x20]=result.real
+    ; [rbp-0x10]=result.img
+    finit
+    fld Tword [rbp+0x30]        ; loading second.real
+    fld Tword [rbp+0x10]        ; loading first.real
+    faddp                      ; first.real-second.real
+    fstp Tword [rbp-0x20]        ; storing the real value
+    fld Tword [rbp+0x40]        ; loading second.img
+    fld Tword [rbp+0x20]        ; loading first.img
+    faddp                      ; first.imagine-second.imagine
+    fstp Tword [rbp-0x10]        ; storing the img value
+    movapd xmm0, Oword [rbp-0x20]; xmm0=result.real
+    movapd xmm1, Oword [rbp-0x10]; xmm1 = result.img
+    movapd Oword [rdi],xmm0      ;returning result.real
+    movapd Oword [rdi+0x10],xmm1 ; returning result.img
+    leave
+    ret
     
     
     

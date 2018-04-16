@@ -34,19 +34,19 @@ polynom* getDeriv(polynom* pol){
 //    result.imagine = (first.real*second.imagine)+first.imagine*second.real;
 //    return result;
 //}
-complexNumber subtract(complexNumber first, complexNumber second) {//first-second
-    complexNumber result={0.0,0.0};
-    result.real = first.real-second.real;
-    result.imagine = first.imagine-second.imagine;
-    return result;
-}
+//complexNumber subtract(complexNumber first, complexNumber second) {//first-second
+//    complexNumber result={0.0,0.0};
+//    result.real = first.real-second.real;
+//    result.imagine = first.imagine-second.imagine;
+//    return result;
+//}
 
-complexNumber add(complexNumber first, complexNumber second) {
-    complexNumber result = {0.0,0.0};
-    result.real = first.real+second.real;
-    result.imagine = first.imagine+second.imagine;
-    return result;
-}
+//complexNumber sum(complexNumber first, complexNumber second) {
+//    complexNumber result = {0.0,0.0};
+//    result.real = first.real+second.real;
+//    result.imagine = first.imagine+second.imagine;
+//    return result;
+//}
 
 complexNumber divide(complexNumber dividend, complexNumber divisor) {
     complexNumber divisorConjugate = {divisor.real,-divisor.imagine};
@@ -84,7 +84,7 @@ complexNumber calcF(polynom *pol, complexNumber z) {
     for(int i = 0; i <= pol->order; i++){
         complexNumber xPowerI = power(z,i);
         complexNumber element_i = mult(xPowerI,pol->coeffs[i]);
-        result = add(result,element_i);
+        result = sum(result, element_i);
     }
     return result;
 }
@@ -165,17 +165,7 @@ void readInput(initData *init, polynom *pol) {
 }
 
 int main(int argc, char *argv[]) {
-    complexNumber oneAndTwo={1.0,2.0};
-    complexNumber threeAndOne={3.0,1.0};
-    complexNumber multans1 = mult(oneAndTwo,threeAndOne);
-    printNumber(multans1);
-    complexNumber minux1 = {-1.0,-1.0};
-    complexNumber minux3plus2i = {-3.0,2.0};
-    complexNumber multans2= mult(minux1,minux3plus2i);
-    printNumber(multans2);
-//    complexNumber numbertoAbs = {1.0,1.0};
-    assert(multans1.real==1.0&&multans1.imagine==7.0);
-    assert(multans2.real==5.0&&multans2.imagine==1.0);
+
 //    initData* init = calloc(1, sizeof(initData));
 //    polynom* pol_f = calloc(1, sizeof(polynom));
 //

@@ -1,4 +1,4 @@
-all: main.o mainC.o tests.o
+all: main.o mainC.o
 	gcc -g -Wall -o calc main.o mainC.o -lm
 
 main.o: main.s mainC.o header.h
@@ -7,8 +7,6 @@ main.o: main.s mainC.o header.h
 mainC.o: mainC.c header.h
 	gcc -g -Wall -c -o mainC.o mainC.c
 
-tests.o:
-	gcc -g -Wall -c -o tests.o tests.c
 .PHONY: clean
 
 clean:
