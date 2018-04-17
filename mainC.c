@@ -48,14 +48,14 @@ polynom* getDeriv(polynom* pol){
 //    return result;
 //}
 
-complexNumber divide(complexNumber dividend, complexNumber divisor) {
-    complexNumber divisorConjugate = {divisor.real,-divisor.imagine};
-    long double absolute = squareAbs(divisor);
-    complexNumber result = mult(dividend,divisorConjugate);
-    result.real = result.real/absolute;
-    result.imagine = result.imagine/absolute;
-    return result;
-}
+//complexNumber divide(complexNumber dividend, complexNumber divisor) {
+//    long double absolute = squareAbs(divisor);
+//    complexNumber divisorConjugate = {divisor.real,-divisor.imagine};
+//    complexNumber result = mult(dividend,divisorConjugate);
+//    result.real = result.real/absolute;
+//    result.imagine = result.imagine/absolute;
+//    return result;
+//}
 
 //complexNumber power(complexNumber z, int power) {//assume power>=0
 //    if (power == 0) {
@@ -119,7 +119,7 @@ complexNumber getNumber(char *line) {
 }
 
 void printNumber(complexNumber z) {
-    printf("%Lf %Lfi\n",z.real,z.imagine);
+    printf("%.*Lf %.*Lfi",15,z.real,15,z.imagine);
 }
 
 void printPolynom(polynom *pol) {
@@ -165,9 +165,17 @@ void readInput(initData *init, polynom *pol) {
 }
 
 int main(int argc, char *argv[]) {
-    complexNumber toPower = {5.2,3.5};
-    complexNumber powerAns = power(toPower,2);
-    printNumber(powerAns);
+    complexNumber one={1.0,0.0};
+    complexNumber numbertoAbs = {1.0,1.0};
+    complexNumber divans1 = divide(one,numbertoAbs);
+    complexNumber threeminusi = {-6,-3};
+    complexNumber twoplus5i = {4,6};
+    complexNumber divans2 = divide(threeminusi,twoplus5i);
+    printNumber(divans2);
+    long double i = 0.5656345667;
+    printf("%.*Le",15,i);
+    assert((divans1.real == 0.5)&&(divans1.imagine==(-0.5)));
+//    assert(divans2.real==(1.0/29.0)&&divans2.imagine==(-17.0/29.0));
 //    assert(powerAns.real==8.0&&powerAns.imagine==6.0);
 
 //    initData* init = calloc(1, sizeof(initData));
@@ -191,6 +199,6 @@ int main(int argc, char *argv[]) {
 //    }
 //    // print the result
 //    printNumber(z);
-//    printf("root = %Le %Le",z.real
-//    ,z.imagine);
+//    printf("root = %.*Le %.*Le",15,z.real
+//    ,15,z.imagine);
 }

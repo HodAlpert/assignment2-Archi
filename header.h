@@ -39,7 +39,7 @@ extern long double squareAbs(complexNumber z);//?? not neccesery ??
 
 //arithmetic operations
 extern complexNumber power(complexNumber z, int power);
-complexNumber divide(complexNumber dividend, complexNumber divisor);// (Dividend/Divisor) = quotient.remainder hod
+extern complexNumber divide(complexNumber dividend, complexNumber divisor);// (Dividend/Divisor) = quotient.remainder hod
 extern complexNumber mult(complexNumber first, complexNumber second);
 extern complexNumber sum(complexNumber first, complexNumber second);
 extern complexNumber subtract(complexNumber first, complexNumber second);

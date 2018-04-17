@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 #include "header.h"
 
 complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv){
@@ -12,7 +13,7 @@ complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv){
     complexNumber z_f = calcF(pol_f,z);
     complexNumber z_f_deriv = calcF(pol_f_deriv,z);
     complexNumber quotient = divide(z_f, z_f_deriv);
-    z = sub(curr_z, quotient);
+    z = subtract(curr_z, quotient);
     return z;
 }
 
@@ -27,21 +28,20 @@ polynom* getDeriv(polynom* pol){
     return newPolynom;
 }
 
-//complexNumber mult(complexNumber first, complexNumber second) {
-//    complexNumber result = {0.0,0.0};
-//    result.real = (first.real*second.real)-first.imagine*second.imagine;
-//    result.imagine = (first.real*second.imagine)+first.imagine*second.real;
-//    return result;
-//}
-
-complexNumber sub(complexNumber first, complexNumber second) {//first-second
+complexNumber mult(complexNumber first, complexNumber second) {
+    complexNumber result = {0.0,0.0};
+    result.real = (first.real*second.real)-first.imagine*second.imagine;
+    result.imagine = (first.real*second.imagine)+first.imagine*second.real;
+    return result;
+}
+complexNumber subtract(complexNumber first, complexNumber second) {//first-second
     complexNumber result={0.0,0.0};
     result.real = first.real-second.real;
     result.imagine = first.imagine-second.imagine;
     return result;
 }
 
-complexNumber add(complexNumber first, complexNumber second) {
+complexNumber sum(complexNumber first, complexNumber second) {
     complexNumber result = {0.0,0.0};
     result.real = first.real+second.real;
     result.imagine = first.imagine+second.imagine;
@@ -49,8 +49,8 @@ complexNumber add(complexNumber first, complexNumber second) {
 }
 
 complexNumber divide(complexNumber dividend, complexNumber divisor) {
-    complexNumber divisorConjugate = {divisor.real,-divisor.imagine};
     long double absolute = squareAbs(divisor);
+    complexNumber divisorConjugate = {divisor.real,-divisor.imagine};
     complexNumber result = mult(dividend,divisorConjugate);
     result.real = result.real/absolute;
     result.imagine = result.imagine/absolute;
@@ -84,7 +84,7 @@ complexNumber calcF(polynom *pol, complexNumber z) {
     for(int i = 0; i <= pol->order; i++){
         complexNumber xPowerI = power(z,i);
         complexNumber element_i = mult(xPowerI,pol->coeffs[i]);
-        result = add(result,element_i);
+        result = sum(result, element_i);
     }
     return result;
 }
@@ -119,7 +119,7 @@ complexNumber getNumber(char *line) {
 }
 
 void printNumber(complexNumber z) {
-    printf("%Lf %Lfi",z.real,z.imagine);
+    printf("%Lf %Lfi\n",z.real,z.imagine);
 }
 
 void printPolynom(polynom *pol) {
@@ -165,30 +165,38 @@ void readInput(initData *init, polynom *pol) {
 }
 
 int main(int argc, char *argv[]) {
-    complexNumber n1 = {1,2};
-    complexNumber n2 = {2,3};
-    mult(n1,n2);
-    initData* init = calloc(1, sizeof(initData));
-    polynom* pol_f = calloc(1, sizeof(polynom));
+    complexNumber one={1.0,0.0};
+    complexNumber numbertoAbs = {1.0,1.0};
+    complexNumber divans1 = divide(one,numbertoAbs);
+    complexNumber threeminusi = {3.0,-1.0};
+    complexNumber twoplus5i = {2.0,5.0};
+    complexNumber divans2 = divide(threeminusi,twoplus5i);
+    printNumber(divans1);
+    assert((divans1.real == 0.5)&&(divans1.imagine==(-0.5)));
+    assert(divans2.real==(1.0/29.0)&&divans2.imagine==(-17.0/29.0));
+//    assert(powerAns.real==8.0&&powerAns.imagine==6.0);
 
-    readInput(init, pol_f);
-
-    // printf("epsilon: %lf\ninitial: ", init->epsilon);
-    // printNumber(init->initial);
-    // printf("\norder: %d\n", pol_f->order);
-    // printPolynom(pol_f);
-
-    polynom* pol_f_deriv = getDeriv(pol_f);
-    complexNumber z = init->initial;
-
-    //printPolynom(pol_f_deriv);
-
-    z = getNextZ(z, pol_f, pol_f_deriv);
-    while (!checkAcc(init, pol_f, z)){
-        z = getNextZ(z, pol_f, pol_f_deriv);
-    }
-    // print the result
+//    initData* init = calloc(1, sizeof(initData));
+//    polynom* pol_f = calloc(1, sizeof(polynom));
+//
+//    readInput(init, pol_f);
+//
+//    // printf("epsilon: %lf\ninitial: ", init->epsilon);
+//    // printNumber(init->initial);
+//    // printf("\norder: %d\n", pol_f->order);
+//    // printPolynom(pol_f);
+//
+//	polynom* pol_f_deriv = getDeriv(pol_f);
+//    complexNumber z = init->initial;
+//
+//    //printPolynom(pol_f_deriv);
+//
+//    z = getNextZ(z, pol_f, pol_f_deriv);
+//	while (!checkAcc(init, pol_f, z)){
+//        z = getNextZ(z, pol_f, pol_f_deriv);
+//    }
+//    // print the result
 //    printNumber(z);
-    printf("root = %Le %Le",z.real
-            ,z.imagine);
+//    printf("root = %Le %Le",z.real
+//    ,z.imagine);
 }

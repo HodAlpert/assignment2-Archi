@@ -10,6 +10,7 @@ section .bss
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 section .text
+    global divide 
     global power
     global squareAbs
     global sum
@@ -243,6 +244,49 @@ power:
         leave
         ret
     
-    
-    
-    
+divide:
+    push rbp
+    mov rbp,rsp
+    sub rsp, 0x20
+    ;[rbp-0x10] = absolute
+    ;[rbp-0x20] = result.img
+    ;[rbp-0x30] = result.real
+    ;[rbp-0x40] = divisorConjugate.img
+    ;[rbp-0x50] = divisorConjugate.real
+    ;[rbp-0x60] = dividend.img
+    ;[rbp-0x70] = dividend.real
+    movapd xmm0, Oword [rbp+0x30]
+    movapd oword [rbp-0x20], xmm0;saving -divisorConjugate.real
+    movapd xmm0, Oword [rbp+0x40]
+    movapd oword [rbp-0x10], xmm0; saving dividend.img
+    call squareAbs
+    sub rsp, 0x50
+    fstp Tword [rbp-0x10]       ;[rbp-0x10] <- absolute
+    fld Tword [rbp+0x40]
+    fld1
+    fldz
+    fsubrp
+    fmulp
+;     fmulp                       ; getting -divisorConjugate.img
+    fstp Tword [rbp-0x40] ;saving -divisorConjugate.img
+    movapd xmm0, Oword [rbp+0x30]
+    movapd oword [rbp-0x50], xmm0;saving -divisorConjugate.real
+    movapd xmm0, Oword [rbp+0x20]
+    movapd oword [rbp-0x60], xmm0; saving dividend.img
+    movapd xmm0, Oword [rbp+0x10]
+    movapd oword [rbp-0x70], xmm0; saving dividend.real
+    mov rsi,rdi                 ; saving rdi
+    lea rdi, [rbp-0x30]        ; giving rdi the result address
+    call mult
+    mov rdi,rsi                 ; restoring rdi
+    fld Tword [rbp-0x30] ; load result.real
+    fld Tword [rbp-0x10] ;load absolute
+    fdivp           ; result.real/absolute
+    fstp Tword [rdi] ;saving result.real
+    fld Tword [rbp-0x20] ; load result.real
+    fld Tword [rbp-0x10] ;load absolute
+    fdivp           ; result.real/absolute
+    fstp Tword [rdi+0x10] ;saving result.real
+    leave
+    ret
+   ; //*/TODO- check divide

@@ -40,7 +40,7 @@ long double squareAbs(complexNumber z);//?? not neccesery ??
 //arithmetic operations
 complexNumber power(complexNumber z, int power);
 complexNumber divide(complexNumber dividend, complexNumber divisor);// (Dividend/Divisor) = quotient.remainder hod
-extern complexNumber mult(complexNumber first, complexNumber second);
+complexNumber mult(complexNumber first, complexNumber second);
 complexNumber add(complexNumber first, complexNumber second);
 complexNumber sub(complexNumber first, complexNumber second);
 
