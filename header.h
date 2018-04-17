@@ -28,11 +28,12 @@ int getOrderValue(char *line);
 int getCoeffIndex(char *line);
 complexNumber getNumber(char *line);
 
-complexNumber calcF(polynom* pol, complexNumber z);
+extern complexNumber calcF(polynom* pol, complexNumber z);
 
 polynom* getDeriv(polynom* pol);
 
 complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv);
+
 
 int checkAcc(initData* init, polynom* pol, complexNumber z); //checking the root
 extern long double squareAbs(complexNumber z);//?? not neccesery ??

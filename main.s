@@ -10,6 +10,7 @@ section .bss
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 section .text
+    global calcF
     global divide 
     global power
     global squareAbs
@@ -23,7 +24,6 @@ section .text
     extern getNextZ
     extern checkAcc
     extern printNumber
-    extern calcF
 
 ; main:
 ; 
@@ -205,6 +205,8 @@ squareAbs:
     ret
     
 power:
+; assuming power is in esi
+; assuming return value pointer is in rdi
     enter 0x50,0
     ; [rbp-0x4] = power
     ; [rbp-0x30]=result.real
@@ -267,7 +269,6 @@ divide:
     fldz
     fsubrp
     fmulp
-;     fmulp                       ; getting -divisorConjugate.img
     fstp Tword [rbp-0x40] ;saving -divisorConjugate.img
     movapd xmm0, Oword [rbp+0x30]
     movapd oword [rbp-0x50], xmm0;saving -divisorConjugate.real
@@ -289,4 +290,101 @@ divide:
     fstp Tword [rdi+0x10] ;saving result.real
     leave
     ret
-   ; //*/TODO- check divide
+    
+
+%xdefine address_of_the_return_value qword [rbp-0x8]
+%xdefine pol_address qword [rbp-0x10]
+%xdefine z_real [rbp-0x20]
+%xdefine z_img [rbp-0x30]
+%xdefine index dword [rbp-0x34]
+%xdefine pol_order dword [rbp-0x38]
+%xdefine result_real [rbp-0x48]
+%xdefine result_img [rbp-0x58]
+%xdefine element_i_img [rbp-0x68]
+%xdefine element_i_real [rbp-0x78]
+%xdefine x_power_i_img [rbp-0x88]
+%xdefine x_power_i_real [rbp-0x98]
+%xdefine second_parameter_img [rbp-0xa8]
+%xdefine second_parameter_real [rbp-0xb8]
+%xdefine fisrt_parameter_img [rbp-0xc8]
+%xdefine first_parameter_real [rbp-0xd8]
+
+; calcF:
+;     ;assuming rdi has the address of the return value
+;     ;assuming rsi =polynom* pol
+;     ;assuming [rbp+0x10]= z.real
+;     ;assuming [rbp+0x20]=z.img
+;     enter 0xd8,0
+;     mov address_of_the_return_value, rdi
+;     mov pol_address, rsi
+;     movapd xmm0, Oword [rbp+0x10]
+;     movapd xmm1, Oword [rbp+0x20]
+;     movapd Oword z_real, xmm0
+;     movapd oword z_img, xmm1
+;     mov index, 0
+;     mov esi, dword [rsi]
+;     mov pol_order, esi
+;     fldz
+;     fldz
+;     fstp Tword result_real
+;     fstp Tword result_img
+;     .myloop:
+;         fld tword [rbp+0x10]
+;         fstp Tword first_parameter_real
+;         fld Tword [rbp+0x20]
+;         fstp Tword fisrt_parameter_img
+;         movapd Oword z_real, xmm0
+;         movapd oword z_img, xmm1
+; 
+;         lea rdi, x_power_i_real         ; giving rdi the address of xpoweri to call mult
+;         mov esi, index
+;         call power          ;calling xPowerI = power(z,i)
+;         
+;         fld Tword x_power_i_real
+;         fstp Tword first_parameter_real
+;         fld Tword x_power_i_img
+;         fstp Tword fisrt_parameter_img      ;moving first parameter for mult
+;         mov rax, pol_address                        
+;         lea rax, [rax+0x8]
+;         mov edx, index
+;         movsxd rdx, edx
+;         shl rdx, 5
+;         add rax, rdx
+;         fld Tword [rax]        ; xmm0<-coeffs[i].real
+;         fstp Tword second_parameter_real
+;         fld Tword [rax+0x10]   ; xmm1<-coeffs[i].img
+;         fstp Tword second_parameter_img         ; moving second parameter for mult
+;         lea rdi, element_i_real
+;         call mult           ; element_i = mult(xPowerI,pol->coeffs[i])
+;         
+;         fld Tword result_real
+;         fstp Tword first_parameter_real
+;         fld Tword result_img
+;         fstp Tword fisrt_parameter_img      ;moving first parameter for sum
+;         
+;         fld Tword element_i_real        ; xmm0<-element_i.real
+;         fstp Tword second_parameter_real
+;         fld Tword [rdi+0x10]               ; xmm1<-element_i.img
+;         fstp Tword second_parameter_img         ; moving second parameter for mult
+;         lea rdi, element_i_real
+;         call sum
+;         ;checking loop consitions
+;         inc index
+;         mov esi, index
+;         cmp esi, pol_order
+;         jle .myloop
+;         
+;         ;returning result
+;         mov rdi, address_of_the_return_value
+;         fld Tword result_real
+;         fstp Tword [rbp+0x10]
+;         fld Tword result_img
+;         fstp Tword [rbp+0x20]
+;         leave
+;         ret
+
+    
+
+    
+
+    
