@@ -56,7 +56,7 @@ polynom* getDeriv(polynom* pol){
 //    result.imagine = result.imagine/absolute;
 //    return result;
 //}
-
+//
 //complexNumber power(complexNumber z, int power) {//assume power>=0
 //    if (power == 0) {
 //        complexNumber z = {1.0, 0.0};
@@ -89,34 +89,7 @@ int checkAcc(initData *init, polynom *pol, complexNumber z) {
 //    return result;
 //}
 
-// int getCoeffPower(char *line) {
-//     return atoi(line+6);
-// }
 
-long double getEpsilonValue(char *line) {
-    char* temp = line;
-    for (;(*temp<'0')||(*temp>'9');temp++){}
-    return strtold(temp,NULL);
-}
-
-int getOrderValue(char *line) {
-    char* temp = line;
-    for (;(*temp<'0')||(*temp>'9');temp++){}
-    return atoi(temp);
-}
-
-int getCoeffIndex(char *line) {
-    return atoi(line+6);
-}
-
-complexNumber getNumber(char *line) {
-    complexNumber result={0.0,0.0};
-    char* temp = line;
-    char* end;
-    result.real =strtold(temp,&end);
-    result.imagine = strtold(end,NULL);
-    return result;
-}
 
 void printNumber(complexNumber z) {
     printf("%.*Lf %.*Lfi\n",15,z.real,15,z.imagine);
@@ -136,32 +109,18 @@ void printPolynom(polynom *pol) {
 }
 
 void readInput(initData *init, polynom *pol) {
-    char* currentline = NULL;
-    size_t len=0;
-    ssize_t read;
-    while((read = getline(&currentline,&len,stdin))!=-1){
-        if(strstr(currentline,"epsilon")!=NULL){
-            init->epsilon = getEpsilonValue(currentline);
-        }
-        else if(strstr(currentline,"order")!=NULL){
-            pol->order = getOrderValue(currentline);
-            pol->coeffs = calloc((size_t)pol->order+1,sizeof(complexNumber));
-        }
-        else if(strstr(currentline,"coeff")!=NULL){
-            int power = getCoeffIndex(currentline);
-            char* temp=currentline;
-            for (;(*temp!='=');temp++){}
-            pol->coeffs[power] = getNumber(temp+1);
-            continue;
-        }
-        else if(strstr(currentline,"initial")!=NULL){
-            char* temp=currentline;
-            for (;(*temp!='=');temp++){}
-            init->initial= getNumber(temp+1);
-            break;
-        }
+    scanf("epsilon = %Lf\n", &init->epsilon);
+    scanf("order = %d\n", &pol->order);
+    pol->coeffs = calloc((size_t) pol->order + 1, sizeof(complexNumber));
+    for (int i = 0; i <= pol->order; i++) {
+        int current = 0;
+        long double real = 0;
+        long double img = 0;
+        scanf("coeff %d = %Lf %Lf\n", &current, &real, &img);
+        pol->coeffs[current].real = real;
+        pol->coeffs[current].imagine = img;
     }
-    free(currentline);
+    scanf("initial = %Lf %Lf", &init->initial.real, &init->initial.imagine);
 }
 
 int main(int argc, char *argv[]) {

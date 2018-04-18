@@ -123,7 +123,13 @@ section .text
 ; ;     leave
 ; ;     ret
 ; ;assuming xmm0=first.real, xmm1 = first.img, xmm2 = second.real, xmm3 = second.img
+
 mult:
+;assuming first.real in [rbp+0x10]
+;assuming first.img in [rbp+0x20]
+;assuming second.real in [rbp+0x30]
+;assuming second.img in [rbp+0x40]
+;assuming address to put result is in rdi
    enter 0x20,0
                                 ; [rbp-0x20]=result.real
                                 ; [rbp-0x10]=result.img
@@ -152,9 +158,12 @@ mult:
    ret
 
 subtract:
+;assuming first.real in [rbp+0x10]
+;assuming first.img in [rbp+0x20]
+;assuming second.real in [rbp+0x30]
+;assuming second.img in [rbp+0x40]
+;assuming address to put result is in rdi
     enter 0x20,0
-     ; [rbp-0x20]=result.real
-    ; [rbp-0x10]=result.img
     finit
     fld Tword [rbp+0x30]        ; loading second.real
     fld Tword [rbp+0x10]        ; loading first.real
@@ -172,6 +181,11 @@ subtract:
     ret
     
 sum:
+;assuming first.real in [rbp+0x10]
+;assuming first.img in [rbp+0x20]
+;assuming second.real in [rbp+0x30]
+;assuming second.img in [rbp+0x40]
+;assuming address to put result is in rdi
     enter 0x20,0
     ; [rbp-0x20]=result.real
     ; [rbp-0x10]=result.img
@@ -192,6 +206,9 @@ sum:
     ret
     
 squareAbs:
+;assuming z.real in [rbp+0x10]
+;assuming z.img in [rbp+0x20]
+;return value is in st(0)
     enter 0x0,0
     finit
     fld Tword [rbp+0x10]
@@ -249,6 +266,11 @@ power:
         ret
     
 divide:
+;assuming first.real in [rbp+0x10]
+;assuming first.img in [rbp+0x20]
+;assuming second.real in [rbp+0x30]
+;assuming second.img in [rbp+0x40]
+;assuming address to put result is in rdi
     push rbp
     mov rbp,rsp
     sub rsp, 0x20
