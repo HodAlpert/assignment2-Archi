@@ -208,7 +208,7 @@ sum:
 squareAbs:
 ;assuming z.real in [rbp+0x10]
 ;assuming z.img in [rbp+0x20]
-;return value is in st(0)
+;value will return in st(0)
     enter 0x0,0
     finit
     fld Tword [rbp+0x10]
