@@ -1,6 +1,7 @@
 //
 // Created by hod on 13/04/18.
-//
+//find examples at
+//http://u.math.biu.ac.il/~agronoa/Numerical/NonLinearEquationSolution.pdf
 #include <assert.h>
 #include <stdio.h>
 #include <malloc.h>
