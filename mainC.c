@@ -76,7 +76,7 @@ polynom* getDeriv(polynom* pol){
 //}
 
 int checkAcc(initData *init, polynom *pol, complexNumber z) {
-    return ( squareAbs(calcF(pol,z)) < (init->epsilon) );
+    return ( squareAbs(calcF(pol,z)) < (init->epsilon*init->epsilon) );
 }
 
 //complexNumber calcF(polynom *pol, complexNumber z) {
