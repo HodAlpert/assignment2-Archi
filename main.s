@@ -21,7 +21,7 @@ section .text
 ;     extern calloc
 ;     extern readInput
 ;     extern getDeriv
-;     extern getNextZ
+    global getNextZ
 ;     extern checkAcc
 ;     extern printNumber
 ; 
@@ -403,7 +403,67 @@ calcF:
         fstp Tword [rdi+0x10]
         leave
         ret
+        
+%xdefine z_real Tword [rbp+0x10]
+%xdefine z_img Tword [rbp+0x20]
+%xdefine return_address qword [rbp-0x8]
+%xdefine pol_f_address qword [rbp-0x10]
+%xdefine pol_f_deriv_address qword [rbp-0x18]
+%xdefine z_f_img Tword [rbp-0x28]
+%xdefine z_f_real Tword [rbp-0x38]
+%xdefine z_f_deriv_img Tword [rbp-0x48]
+%xdefine z_f_deriv_real Tword [rbp-0x58]
+%xdefine quotient_img Tword [rbp-0x68]
+%xdefine quotient_real Tword [rbp-0x78]
+%xdefine first_img Tword [rbp-0x88]
+%xdefine first_real Tword [rbp-0x98]
+%xdefine second_img Tword [rbp-0xa8]
+%xdefine second_real Tword [rbp-0xb8]
 
+getNextZ:
+; assuming rdi has address to return answer
+; assuming rsi = pol_address
+; assuming rdx = pol_deriv_address
+enter 0xb8,0
+mov return_address, rdi
+mov pol_f_address, rsi
+mov pol_f_deriv_address, rdx
+;calling calcF(pol_f,z)
+fld z_real
+fstp second_real
+fld z_img
+fstp second_img
+lea rdi,[rbp-0x38]      ; setting return address for calcF (z_f)
+call calcF
+; calling calcF(pol_f_deriv,z)
+mov rsi, pol_f_deriv_address
+lea rdi, [rbp-0x58] ; setting return address for calcF (z_f_deriv)
+call calcF
+;calling divide(z_f, z_f_deriv)
+fld z_f_deriv_real
+fstp first_real
+fld z_f_deriv_img
+fstp first_img
+fld z_f_real
+fstp second_real
+fld z_f_img
+fstp second_img
+lea rdi,[rbp-0x78]  ; setting return value address for divide (quotient)
+call divide
+;calling subtract(z, quotient)
+fld z_real
+fstp second_real
+fld z_img
+fstp second_img
+fld quotient_real
+fstp first_real
+fld quotient_img
+fstp first_img
+mov rdi, return_address
+call subtract
+leave
+ret
+    
     
 
     

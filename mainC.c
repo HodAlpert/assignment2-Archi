@@ -8,14 +8,14 @@
 #include <assert.h>
 #include "header.h"
 
-complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv){
-   complexNumber curr_z = z;
-   complexNumber z_f = calcF(pol_f,z);
-   complexNumber z_f_deriv = calcF(pol_f_deriv,z);
-   complexNumber quotient = divide(z_f, z_f_deriv);
-   z = subtract(curr_z, quotient);
-   return z;
-}
+//complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv){
+//   complexNumber curr_z = z;
+//   complexNumber z_f = calcF(pol_f,z);
+//   complexNumber z_f_deriv = calcF(pol_f_deriv,z);
+//   complexNumber quotient = divide(z_f, z_f_deriv);
+//   z = subtract(curr_z, quotient);
+//   return z;
+//}
 
 polynom* getDeriv(polynom* pol){
     polynom* newPolynom = calloc(1, sizeof(polynom));
@@ -148,5 +148,5 @@ int main(int argc, char *argv[]) {
     free(pol_f);
     free(pol_f_deriv->coeffs);
     free(pol_f_deriv);
-    printf("root = %.*Le %.*Le\n", 15, z.real, 15, z.imagine);
+    printf("root = %.*Le %.*Le\n", 17, z.real, 17, z.imagine);
 }
