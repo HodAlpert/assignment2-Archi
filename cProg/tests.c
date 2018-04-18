@@ -51,12 +51,16 @@ void arithmaticTests(){
     pol->coeffs[3]=a3;
     complexNumber x1={1.0,0.0};
     complexNumber y1 = calcF(pol, x1);
+    printNumber(y1);
     assert(y1.real==17.0&&y1.imagine==0.0);
     complexNumber x2={3.0,0.0};
     complexNumber y2 = calcF(pol,x2);
+    printNumber(y2);
     assert(y2.real==121.0&&y2.imagine==0.0);
-    //complexNumber x3={3.0,-3.2};
-    //complexNumber y3=calcF(pol,x3);
+    complexNumber x3={3.0,-3.2};
+    complexNumber y3=calcF(pol,x3);
+    printNumber(y3);
+
 //    assert(y3.real==-(175.0+(24.0/24.0))&&y3.imagine==-(215.0+(37.0/125.0)));//not working- check manually
     complexNumber zn = {2.0};
     polynom* derivpol = getDeriv(pol);

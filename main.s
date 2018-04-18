@@ -1,14 +1,14 @@
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	
+; 
+; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 	
 section .data
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+; 
+; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 
 section .bss
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+; 
+; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 
 section .text
     global calcF
     global divide 
@@ -17,112 +17,112 @@ section .text
     global sum
     global subtract
     global mult
-    global main
-    extern calloc
-    extern readInput
-    extern getDeriv
-    extern getNextZ
-    extern checkAcc
-    extern printNumber
-
-; main:
+;     global main
+;     extern calloc
+;     extern readInput
+;     extern getDeriv
+;     extern getNextZ
+;     extern checkAcc
+;     extern printNumber
 ; 
-; 		;z :
-; 			;z.real - [rbp - 0x10] 
-; 			;z.imagine - [rbp - 0x8] 
-; 		;init* - [rbp - 0x28]
-; 		;pol_f* - [rbp - 0x20]
-; 		;pol_f_deriv* - [rbp - 0x18]
-; 
-;     enter 0x50,0 ;allocate space for local variables
-; 
-;     calloc for initDate (1,24)
-;     mov rdi,0x1
-;     mov rsi, 0x18
-;     mov rax, 0
-;     call calloc
-;     mov qword [rbp-0x28],rax ;init*
-; 
-;     ;calloc for pol_f (1,16)
-;     mov rdi,0x1             
-;     mov rsi,0x10
-;     mov rax, 0
-;     call calloc             
-;     mov qword [rbp-0x20],rax ;pol_f* 
-; 
-; 	;readInput(init*, pol*)
-;     mov rdi,qword [rbp-0x28]
-;     mov rsi,qword [rbp-0x20]
-;     mov rax ,0
-;     call readInput
-;     
-;     ;getDeriv(pol*)
-;     mov rdi,qword [rbp-0x20]
-;     mov rax, 0
-;     call getDeriv
-;     mov qword [rbp-0x18],rax ; returns pol_f_deriv* 
-; 
-;     mov rax, qword [rbp-0x28] ;init*
-;     mov rbx, qword [rax+0x8] ;init->real
-;     mov rdx, qword [rax+0x10] ;init->imagine
-;     mov qword [rbp-0x10],rbx ; z.real
-;     mov qword [rbp-0x8],rdx ; z.imagine
-;    
-; .loop:
-; 
-;     ;getNextZ(z, pol_f*, pol_f_deriv)
-;     movsd xmm1, qword [rbp-0x8] ;xmm1-z.real
-;     movsd xmm0, qword [rbp-0x10];xmm0-z.imagine
-;     mov rdi, qword [rbp-0x20]
-;     mov rsi, qword [rbp-0x18]
-;     mov rax, 2
-;     call getNextZ
-; 
-;     movq qword [rbp-0x8],xmm1 ;nextZ.real
-;     movq qword [rbp-0x10], xmm0 ;nextZ.imagine
-; 
-; 
-;     mov rdi, [rbp-0x20]
-;     ;calcF(pol_f*, z) - z is already in xmm0 and xmm1
-;     call calcF
-; 	movq qword [rbp-0x30],xmm1 ;f(z).real
-;     movq qword [rbp-0x38], xmm0 ;f(z).imagine
-; ;;צריך לשנות את tword ל oword
-;     finit
-;     fld tword [rbp-0x30] ;load real
-;     fld st0 ;load real again
-;     fmul ; real^2
-;     fld tword [rbp-0x38] ;load imagine
-;     fld st0 ;laod imagine again
-;     fmul ;imagine^2
-;     fadd ; (imagine^2 + real^2)
-;     fsqrt ; ||z||
-;     mov rax, qword [rbp-0x28]
-;     fld tword [rax] ; load epsilon
-;     fcomi
-;     jle .loop
-; 
-; 
-;     ;checkAcc(init*, pol_f*, z) newZ is already in xmm0 and xmm1
-;     ; mov rdi, qword [rbp-0x28]              
-;     ; mov rsi, qword [rbp-0x20]              
-;     ; mov rax, 2
-;     ; call checkAcc
-;     
-;     ; ;test operation sets ZF to 1 when the result of the AND operation is 0
-;     ; ;Ergo, when rax=0 ZF is set to 1 and we jump to the loop. If rax is 1 then we finished.
-;     ; test rax, rax 
-;     ; je .loop                
-;    
-;     movsd xmm1, qword [rbp-0x8] 
-;     movsd xmm0, qword [rbp-0x10]
-;     mov rax, 2
-;     call printNumber          
-; 
-;     mov rax, 0
-;     leave
-;     ret
-;assuming xmm0=first.real, xmm1 = first.img, xmm2 = second.real, xmm3 = second.img
+; ; main:
+; ; 
+; ; 		;z :
+; ; 			;z.real - [rbp - 0x10] 
+; ; 			;z.imagine - [rbp - 0x8] 
+; ; 		;init* - [rbp - 0x28]
+; ; 		;pol_f* - [rbp - 0x20]
+; ; 		;pol_f_deriv* - [rbp - 0x18]
+; ; 
+; ;     enter 0x50,0 ;allocate space for local variables
+; ; 
+; ;     calloc for initDate (1,24)
+; ;     mov rdi,0x1
+; ;     mov rsi, 0x18
+; ;     mov rax, 0
+; ;     call calloc
+; ;     mov qword [rbp-0x28],rax ;init*
+; ; 
+; ;     ;calloc for pol_f (1,16)
+; ;     mov rdi,0x1             
+; ;     mov rsi,0x10
+; ;     mov rax, 0
+; ;     call calloc             
+; ;     mov qword [rbp-0x20],rax ;pol_f* 
+; ; 
+; ; 	;readInput(init*, pol*)
+; ;     mov rdi,qword [rbp-0x28]
+; ;     mov rsi,qword [rbp-0x20]
+; ;     mov rax ,0
+; ;     call readInput
+; ;     
+; ;     ;getDeriv(pol*)
+; ;     mov rdi,qword [rbp-0x20]
+; ;     mov rax, 0
+; ;     call getDeriv
+; ;     mov qword [rbp-0x18],rax ; returns pol_f_deriv* 
+; ; 
+; ;     mov rax, qword [rbp-0x28] ;init*
+; ;     mov rbx, qword [rax+0x8] ;init->real
+; ;     mov rdx, qword [rax+0x10] ;init->imagine
+; ;     mov qword [rbp-0x10],rbx ; z.real
+; ;     mov qword [rbp-0x8],rdx ; z.imagine
+; ;    
+; ; .loop:
+; ; 
+; ;     ;getNextZ(z, pol_f*, pol_f_deriv)
+; ;     movsd xmm1, qword [rbp-0x8] ;xmm1-z.real
+; ;     movsd xmm0, qword [rbp-0x10];xmm0-z.imagine
+; ;     mov rdi, qword [rbp-0x20]
+; ;     mov rsi, qword [rbp-0x18]
+; ;     mov rax, 2
+; ;     call getNextZ
+; ; 
+; ;     movq qword [rbp-0x8],xmm1 ;nextZ.real
+; ;     movq qword [rbp-0x10], xmm0 ;nextZ.imagine
+; ; 
+; ; 
+; ;     mov rdi, [rbp-0x20]
+; ;     ;calcF(pol_f*, z) - z is already in xmm0 and xmm1
+; ;     call calcF
+; ; 	movq qword [rbp-0x30],xmm1 ;f(z).real
+; ;     movq qword [rbp-0x38], xmm0 ;f(z).imagine
+; ; ;;צריך לשנות את tword ל oword
+; ;     finit
+; ;     fld tword [rbp-0x30] ;load real
+; ;     fld st0 ;load real again
+; ;     fmul ; real^2
+; ;     fld tword [rbp-0x38] ;load imagine
+; ;     fld st0 ;laod imagine again
+; ;     fmul ;imagine^2
+; ;     fadd ; (imagine^2 + real^2)
+; ;     fsqrt ; ||z||
+; ;     mov rax, qword [rbp-0x28]
+; ;     fld tword [rax] ; load epsilon
+; ;     fcomi
+; ;     jle .loop
+; ; 
+; ; 
+; ;     ;checkAcc(init*, pol_f*, z) newZ is already in xmm0 and xmm1
+; ;     ; mov rdi, qword [rbp-0x28]              
+; ;     ; mov rsi, qword [rbp-0x20]              
+; ;     ; mov rax, 2
+; ;     ; call checkAcc
+; ;     
+; ;     ; ;test operation sets ZF to 1 when the result of the AND operation is 0
+; ;     ; ;Ergo, when rax=0 ZF is set to 1 and we jump to the loop. If rax is 1 then we finished.
+; ;     ; test rax, rax 
+; ;     ; je .loop                
+; ;    
+; ;     movsd xmm1, qword [rbp-0x8] 
+; ;     movsd xmm0, qword [rbp-0x10]
+; ;     mov rax, 2
+; ;     call printNumber          
+; ; 
+; ;     mov rax, 0
+; ;     leave
+; ;     ret
+; ;assuming xmm0=first.real, xmm1 = first.img, xmm2 = second.real, xmm3 = second.img
 mult:
    enter 0x20,0
                                 ; [rbp-0x20]=result.real
@@ -144,10 +144,10 @@ mult:
    fmulp                         ; first.img*second.real
    faddp                         ; first.real*second.img+first.img*second.real
    fstp Tword [rbp-0x10]        ; storing the img value
-   movapd xmm0, Oword [rbp-0x20]; xmm0=result.real
-   movapd xmm1, Oword [rbp-0x10]; xmm1 = result.img
-   movapd Oword [rdi],xmm0      ;returning result.real
-   movapd Oword [rdi+0x10],xmm1 ; returning result.img
+   fld Tword [rbp-0x20]; xmm0=result.real
+   fstp Tword [rdi]      ;returning result.real
+   fld Tword [rbp-0x10]; xmm1 = result.img
+   fstp Tword [rdi+0x10] ; returning result.img
    leave
    ret
 
@@ -164,10 +164,10 @@ subtract:
     fld Tword [rbp+0x20]        ; loading first.img
     fsubrp                      ; first.imagine-second.imagine
     fstp Tword [rbp-0x10]        ; storing the img value
-    movapd xmm0, Oword [rbp-0x20]; xmm0=result.real
-    movapd xmm1, Oword [rbp-0x10]; xmm1 = result.img
-    movapd Oword [rdi],xmm0      ;returning result.real
-    movapd Oword [rdi+0x10],xmm1 ; returning result.img
+    fld Tword [rbp-0x20]; xmm0=result.real
+    fstp Tword [rdi]      ;returning result.real
+    fld Tword [rbp-0x10]; xmm1 = result.img
+    fstp Tword [rdi+0x10]; returning result.img
     leave
     ret
     
@@ -184,10 +184,10 @@ sum:
     fld Tword [rbp+0x20]        ; loading first.img
     faddp                      ; first.imagine-second.imagine
     fstp Tword [rbp-0x10]        ; storing the img value
-    movapd xmm0, Oword [rbp-0x20]; xmm0=result.real
-    movapd xmm1, Oword [rbp-0x10]; xmm1 = result.img
-    movapd Oword [rdi],xmm0      ;returning result.real
-    movapd Oword [rdi+0x10],xmm1 ; returning result.img
+    fld Tword [rbp-0x20]; xmm0=result.real
+    fstp Tword [rdi]      ;returning result.real
+    fld Tword [rbp-0x10]; xmm1 = result.img
+    fstp Tword [rdi+0x10] ; returning result.img
     leave
     ret
     
@@ -220,12 +220,14 @@ power:
     fstp Tword [rbp-0x30]
     fld Tword [rbp+0x20]
     fstp Tword [rbp-0x20]           ;loading z
-    movapd xmm0, Oword [rbp-0x30]; xmm0=result.real
-    movapd xmm1, Oword [rbp-0x20]; xmm1 = result.img
-    movapd Oword [rbp-0x50],xmm0 ;moving result.real to call mult
-    movapd Oword [rbp-0x40],xmm1 ; moving result.img to call mult
+    fld Tword [rbp-0x30]; xmm0=result.real
+    fstp Tword [rbp-0x50] ;moving result.real to call mult
+    fld Tword [rbp-0x20]; xmm1 = result.img
+    fstp Tword [rbp-0x40]; moving result.img to call mult
     mov ecx, esi
     sub ecx,1                       ;power = power-1 (for the loop)
+    cmp ecx,0
+    je .return
     lea rdi, [rbp-0x50]     ; giving rdi return address for mult
     .myloop:
         call mult                     ; result = mult(result,z)
@@ -238,11 +240,11 @@ power:
         fldz
         fstp Tword [rbp-0x40]   ; result.img = 0
     .return:
-        movapd xmm0, Oword [rbp-0x50]; xmm0=result.real
-        movapd xmm1, Oword [rbp-0x40]; xmm1 = result.img
         mov rdi, qword [rbp-0xb]     ; giving rdi the return address
-        movapd Oword [rdi],xmm0      ;returning result.real
-        movapd Oword [rdi+0x10],xmm1 ; returning result.img
+        fld Tword [rbp-0x50]; xmm0=result.real
+        fstp Tword [rdi]      ;returning result.real
+        fld Tword [rbp-0x40]; xmm1 = result.img
+        fstp Tword [rdi+0x10] ; returning result.img
         leave
         ret
     
@@ -257,10 +259,10 @@ divide:
     ;[rbp-0x50] = divisorConjugate.real
     ;[rbp-0x60] = dividend.img
     ;[rbp-0x70] = dividend.real
-    movapd xmm0, Oword [rbp+0x30]
-    movapd oword [rbp-0x20], xmm0;saving -divisorConjugate.real
-    movapd xmm0, Oword [rbp+0x40]
-    movapd oword [rbp-0x10], xmm0; saving dividend.img
+    fld Tword [rbp+0x30]
+    fstp Tword [rbp-0x20];saving -divisorConjugate.real
+    fld Tword [rbp+0x40]
+    fstp Tword [rbp-0x10]; saving dividend.img
     call squareAbs
     sub rsp, 0x50
     fstp Tword [rbp-0x10]       ;[rbp-0x10] <- absolute
@@ -270,12 +272,12 @@ divide:
     fsubrp
     fmulp
     fstp Tword [rbp-0x40] ;saving -divisorConjugate.img
-    movapd xmm0, Oword [rbp+0x30]
-    movapd oword [rbp-0x50], xmm0;saving -divisorConjugate.real
-    movapd xmm0, Oword [rbp+0x20]
-    movapd oword [rbp-0x60], xmm0; saving dividend.img
-    movapd xmm0, Oword [rbp+0x10]
-    movapd oword [rbp-0x70], xmm0; saving dividend.real
+    fld Tword [rbp+0x30]
+    fstp Tword [rbp-0x50];saving -divisorConjugate.real
+    fld Tword [rbp+0x20]
+    fstp Tword [rbp-0x60]; saving dividend.img
+    fld Tword [rbp+0x10]
+    fstp Tword [rbp-0x70]; saving dividend.real
     mov rsi,rdi                 ; saving rdi
     lea rdi, [rbp-0x30]        ; giving rdi the result address
     call mult
@@ -294,12 +296,12 @@ divide:
 
 %xdefine address_of_the_return_value qword [rbp-0x8]
 %xdefine pol_address qword [rbp-0x10]
-%xdefine z_real [rbp-0x20]
-%xdefine z_img [rbp-0x30]
+%xdefine z_img [rbp-0x20]
+%xdefine z_real [rbp-0x30]
 %xdefine index dword [rbp-0x34]
 %xdefine pol_order dword [rbp-0x38]
-%xdefine result_real [rbp-0x48]
-%xdefine result_img [rbp-0x58]
+%xdefine result_img [rbp-0x48]
+%xdefine result_real [rbp-0x58]
 %xdefine element_i_img [rbp-0x68]
 %xdefine element_i_real [rbp-0x78]
 %xdefine x_power_i_img [rbp-0x88]
@@ -309,79 +311,76 @@ divide:
 %xdefine fisrt_parameter_img [rbp-0xc8]
 %xdefine first_parameter_real [rbp-0xd8]
 
-; calcF:
-;     ;assuming rdi has the address of the return value
-;     ;assuming rsi =polynom* pol
-;     ;assuming [rbp+0x10]= z.real
-;     ;assuming [rbp+0x20]=z.img
-;     enter 0xd8,0
-;     mov address_of_the_return_value, rdi
-;     mov pol_address, rsi
-;     movapd xmm0, Oword [rbp+0x10]
-;     movapd xmm1, Oword [rbp+0x20]
-;     movapd Oword z_real, xmm0
-;     movapd oword z_img, xmm1
-;     mov index, 0
-;     mov esi, dword [rsi]
-;     mov pol_order, esi
-;     fldz
-;     fldz
-;     fstp Tword result_real
-;     fstp Tword result_img
-;     .myloop:
-;         fld tword [rbp+0x10]
-;         fstp Tword first_parameter_real
-;         fld Tword [rbp+0x20]
-;         fstp Tword fisrt_parameter_img
+calcF:
+    ;assuming rdi has the address of the return value
+    ;assuming rsi =polynom* pol
+    ;assuming [rbp+0x10]= z.real
+    ;assuming [rbp+0x20]=z.img
+    enter 0xd8,0
+    mov address_of_the_return_value, rdi
+    mov pol_address, rsi
+    fld Tword [rbp+0x10]
+    fstp Tword z_real
+    fld Tword [rbp+0x20]
+    fstp Tword z_img
+    mov index, 0
+    mov esi, Dword [rsi]
+    mov pol_order, esi
+    fldz
+    fldz
+    fstp Tword result_real
+    fstp Tword result_img
+    .myloop:
+        fld Tword z_real
+        fstp Tword first_parameter_real
+        fld Tword z_img
+        fstp Tword fisrt_parameter_img
 ;         movapd Oword z_real, xmm0
 ;         movapd oword z_img, xmm1
-; 
-;         lea rdi, x_power_i_real         ; giving rdi the address of xpoweri to call mult
-;         mov esi, index
-;         call power          ;calling xPowerI = power(z,i)
-;         
-;         fld Tword x_power_i_real
-;         fstp Tword first_parameter_real
-;         fld Tword x_power_i_img
-;         fstp Tword fisrt_parameter_img      ;moving first parameter for mult
-;         mov rax, pol_address                        
-;         lea rax, [rax+0x8]
-;         mov edx, index
-;         movsxd rdx, edx
-;         shl rdx, 5
-;         add rax, rdx
-;         fld Tword [rax]        ; xmm0<-coeffs[i].real
-;         fstp Tword second_parameter_real
-;         fld Tword [rax+0x10]   ; xmm1<-coeffs[i].img
-;         fstp Tword second_parameter_img         ; moving second parameter for mult
-;         lea rdi, element_i_real
-;         call mult           ; element_i = mult(xPowerI,pol->coeffs[i])
-;         
-;         fld Tword result_real
-;         fstp Tword first_parameter_real
-;         fld Tword result_img
-;         fstp Tword fisrt_parameter_img      ;moving first parameter for sum
-;         
-;         fld Tword element_i_real        ; xmm0<-element_i.real
-;         fstp Tword second_parameter_real
-;         fld Tword [rdi+0x10]               ; xmm1<-element_i.img
-;         fstp Tword second_parameter_img         ; moving second parameter for mult
-;         lea rdi, element_i_real
-;         call sum
-;         ;checking loop consitions
-;         inc index
-;         mov esi, index
-;         cmp esi, pol_order
-;         jle .myloop
-;         
-;         ;returning result
-;         mov rdi, address_of_the_return_value
-;         fld Tword result_real
-;         fstp Tword [rbp+0x10]
-;         fld Tword result_img
-;         fstp Tword [rbp+0x20]
-;         leave
-;         ret
+
+        lea rdi, x_power_i_real         ; giving rdi the address of xpoweri to call power
+        mov esi, index
+        call power          ;calling xPowerI = power(z,i)
+        
+        fld Tword x_power_i_real
+        fstp Tword first_parameter_real
+        fld Tword x_power_i_img
+        fstp Tword fisrt_parameter_img      ;moving first parameter for mult
+        mov rax, pol_address                        
+        mov rax, [rax+0x8]
+        mov edx, index
+        movsxd rdx, edx
+        shl rdx, 5
+        add rax, rdx
+        fld Tword [rax]        ; xmm0<-coeffs[i].real
+        fstp Tword second_parameter_real
+        fld Tword [rax+0x10]   ; xmm1<-coeffs[i].img
+        fstp Tword second_parameter_img         ; moving second parameter for mult
+        lea rdi, element_i_real
+        call mult           ; element_i = mult(xPowerI,pol->coeffs[i])
+        
+        fld Tword result_real
+        fstp Tword first_parameter_real
+        fld Tword result_img
+        fstp Tword fisrt_parameter_img      ;moving first parameter for sum
+        fld Tword element_i_real        ; xmm0<-element_i.real
+        fstp Tword second_parameter_real
+        fld Tword element_i_img               ; xmm1<-element_i.img
+        fstp Tword second_parameter_img         ; moving second parameter for mult
+        lea rdi, result_real
+        call sum
+        ;checking loop consitions
+        inc index
+        mov esi, index
+        cmp esi, pol_order
+        jle .myloop
+        mov rdi, address_of_the_return_value
+        fld Tword result_real
+        fstp Tword [rdi]
+        fld Tword result_img
+        fstp Tword [rdi+0x10]
+        leave
+        ret
 
     
 

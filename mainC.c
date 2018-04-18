@@ -28,66 +28,66 @@ polynom* getDeriv(polynom* pol){
     return newPolynom;
 }
 
-complexNumber mult(complexNumber first, complexNumber second) {
-    complexNumber result = {0.0,0.0};
-    result.real = (first.real*second.real)-first.imagine*second.imagine;
-    result.imagine = (first.real*second.imagine)+first.imagine*second.real;
-    return result;
-}
-complexNumber subtract(complexNumber first, complexNumber second) {//first-second
-    complexNumber result={0.0,0.0};
-    result.real = first.real-second.real;
-    result.imagine = first.imagine-second.imagine;
-    return result;
-}
+//complexNumber mult(complexNumber first, complexNumber second) {
+//    complexNumber result = {0.0,0.0};
+//    result.real = (first.real*second.real)-first.imagine*second.imagine;
+//    result.imagine = (first.real*second.imagine)+first.imagine*second.real;
+//    return result;
+//}
+//complexNumber subtract(complexNumber first, complexNumber second) {//first-second
+//    complexNumber result={0.0,0.0};
+//    result.real = first.real-second.real;
+//    result.imagine = first.imagine-second.imagine;
+//    return result;
+//}
 
-complexNumber sum(complexNumber first, complexNumber second) {
-    complexNumber result = {0.0,0.0};
-    result.real = first.real+second.real;
-    result.imagine = first.imagine+second.imagine;
-    return result;
-}
+//complexNumber sum(complexNumber first, complexNumber second) {
+//    complexNumber result = {0.0,0.0};
+//    result.real = first.real+second.real;
+//    result.imagine = first.imagine+second.imagine;
+//    return result;
+//}
 
-complexNumber divide(complexNumber dividend, complexNumber divisor) {
-    long double absolute = squareAbs(divisor);
-    complexNumber divisorConjugate = {divisor.real,-divisor.imagine};
-    complexNumber result = mult(dividend,divisorConjugate);
-    result.real = result.real/absolute;
-    result.imagine = result.imagine/absolute;
-    return result;
-}
+//complexNumber divide(complexNumber dividend, complexNumber divisor) {
+//    long double absolute = squareAbs(divisor);
+//    complexNumber divisorConjugate = {divisor.real,-divisor.imagine};
+//    complexNumber result = mult(dividend,divisorConjugate);
+//    result.real = result.real/absolute;
+//    result.imagine = result.imagine/absolute;
+//    return result;
+//}
 
-complexNumber power(complexNumber z, int power) {//assume power>=0
-    if (power == 0) {
-        complexNumber z = {1.0, 0.0};
-        return z;
-    }
+//complexNumber power(complexNumber z, int power) {//assume power>=0
+//    if (power == 0) {
+//        complexNumber z = {1.0, 0.0};
+//        return z;
+//    }
+//
+//    complexNumber result={z.real,z.imagine};
+//    for (int i=0;i<power-1;i++){
+//        result = mult(result,z);
+//    }
+//    return result;
+//
+//}
 
-    complexNumber result={z.real,z.imagine};
-    for (int i=0;i<power-1;i++){
-        result = mult(result,z);
-    }
-    return result;
-
-}
-
-long double squareAbs(complexNumber z) {
-    return z.real*z.real + z.imagine *z.imagine;
-}
+//long double squareAbs(complexNumber z) {
+//    return z.real*z.real + z.imagine *z.imagine;
+//}
 
 int checkAcc(initData *init, polynom *pol, complexNumber z) {
     return ( squareAbs(calcF(pol,z)) < (init->epsilon) );
 }
 
-complexNumber calcF(polynom *pol, complexNumber z) {
-    complexNumber result={0.0,0.0};
-    for(int i = 0; i <= pol->order; i++){
-        complexNumber xPowerI = power(z,i);
-        complexNumber element_i = mult(xPowerI,pol->coeffs[i]);
-        result = sum(result, element_i);
-    }
-    return result;
-}
+//complexNumber calcF(polynom *pol, complexNumber z) {
+//    complexNumber result={0.0,0.0};
+//    for(int i = 0; i <= pol->order; i++){
+//        complexNumber xPowerI = power(z,i);
+//        complexNumber element_i = mult(xPowerI,pol->coeffs[i]);
+//        result = sum(result, element_i);
+//    }
+//    return result;
+//}
 
 // int getCoeffPower(char *line) {
 //     return atoi(line+6);
@@ -119,7 +119,7 @@ complexNumber getNumber(char *line) {
 }
 
 void printNumber(complexNumber z) {
-    printf("%.*Lf %.*Lfi",15,z.real,15,z.imagine);
+    printf("%.*Lf %.*Lfi\n",15,z.real,15,z.imagine);
 }
 
 void printPolynom(polynom *pol) {
@@ -184,8 +184,10 @@ int main(int argc, char *argv[]) {
 	while (!checkAcc(init, pol_f, z)){
         z = getNextZ(z, pol_f, pol_f_deriv);
     }
-    // print the result
-//    printNumber(z);
-    printf("root = %.*Le %.*Le",15,z.real
-    ,15,z.imagine);
+    free(init);
+    free(pol_f->coeffs);
+    free(pol_f);
+    free(pol_f_deriv->coeffs);
+    free(pol_f_deriv);
+    printf("root = %.*Le %.*Le\n", 15, z.real, 15, z.imagine);
 }
