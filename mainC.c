@@ -2,10 +2,6 @@
 // Created by hod on 11/04/18.
 //
 #include <malloc.h>
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
 #include "header.h"
 
 //complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv){
