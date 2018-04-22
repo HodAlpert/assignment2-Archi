@@ -22,7 +22,7 @@ typedef struct{
     complexNumber initial;
 } initData; // 16+8=24 byte = 0x18
 
-void readInput(initData* init, polynom* pol);// reading input
+extern void readInput(initData* init, polynom* pol);// reading input
 long double getEpsilonValue(char *line);
 int getOrderValue(char *line);
 int getCoeffIndex(char *line);
@@ -32,7 +32,7 @@ extern complexNumber calcF(polynom* pol, complexNumber z);
 
 polynom* getDeriv(polynom* pol);
 
-complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv);
+extern complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv);
 
 
 int checkAcc(initData* init, polynom* pol, complexNumber z); //checking the root

@@ -104,20 +104,20 @@ void printPolynom(polynom *pol) {
     printf("\n");
 }
 
-void readInput(initData *init, polynom *pol) {
-    scanf("epsilon = %Lf\n", &init->epsilon);
-    scanf("order = %d\n", &pol->order);
-    pol->coeffs = calloc((size_t) pol->order + 1, sizeof(complexNumber));
-    for (int i = 0; i <= pol->order; i++) {
-        int current = 0;
-        long double real = 0;
-        long double img = 0;
-        scanf("coeff %d = %Lf %Lf\n", &current, &real, &img);
-        pol->coeffs[current].real = real;
-        pol->coeffs[current].imagine = img;
-    }
-    scanf("initial = %Lf %Lf", &init->initial.real, &init->initial.imagine);
-}
+//void readInput(initData *init, polynom *pol) {
+//    scanf("epsilon = %Lf\n", &init->epsilon);
+//    scanf("order = %d\n", &pol->order);
+//    pol->coeffs = calloc((size_t) pol->order + 1, sizeof(complexNumber));
+//    for (int i = 0; i <= pol->order; i++) {
+//        int current = 0;
+//        long double real = 0;
+//        long double img = 0;
+//        scanf("coeff %d = %Lf %Lf\n", &current, &real, &img);
+//        pol->coeffs[current].real = real;
+//        pol->coeffs[current].imagine = img;
+//    }
+//    scanf("initial = %Lf %Lf", &init->initial.real, &init->initial.imagine);
+//}
 
 int main(int argc, char *argv[]) {
     initData* init = calloc(1, sizeof(initData));
@@ -132,6 +132,7 @@ int main(int argc, char *argv[]) {
 
 	polynom* pol_f_deriv = getDeriv(pol_f);
     complexNumber z = init->initial;
+
 
     //printPolynom(pol_f_deriv);
 

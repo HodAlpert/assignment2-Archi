@@ -18,8 +18,10 @@ section .text
     global subtract
     global mult
 ;     global main
-;     extern calloc
-;     extern readInput
+    extern calloc
+    extern scanf
+    extern printf
+    global readInput
 ;     extern getDeriv
     global getNextZ
 ;     extern checkAcc
@@ -421,51 +423,144 @@ calcF:
 %xdefine second_real Tword [rbp-0xb8]
 
 getNextZ:
-; assuming rdi has address to return answer
-; assuming rsi = pol_address
-; assuming rdx = pol_deriv_address
-enter 0xb8,0
-mov return_address, rdi
-mov pol_f_address, rsi
-mov pol_f_deriv_address, rdx
-;calling calcF(pol_f,z)
-fld z_real
-fstp second_real
-fld z_img
-fstp second_img
-lea rdi,[rbp-0x38]      ; setting return address for calcF (z_f)
-call calcF
-; calling calcF(pol_f_deriv,z)
-mov rsi, pol_f_deriv_address
-lea rdi, [rbp-0x58] ; setting return address for calcF (z_f_deriv)
-call calcF
-;calling divide(z_f, z_f_deriv)
-fld z_f_deriv_real
-fstp first_real
-fld z_f_deriv_img
-fstp first_img
-fld z_f_real
-fstp second_real
-fld z_f_img
-fstp second_img
-lea rdi,[rbp-0x78]  ; setting return value address for divide (quotient)
-call divide
-;calling subtract(z, quotient)
-fld z_real
-fstp second_real
-fld z_img
-fstp second_img
-fld quotient_real
-fstp first_real
-fld quotient_img
-fstp first_img
-mov rdi, return_address
-call subtract
-leave
-ret
+    ; assuming rdi has address to return answer
+    ; assuming rsi = pol_address
+    ; assuming rdx = pol_deriv_address
+    enter 0xb8,0
+    mov return_address, rdi
+    mov pol_f_address, rsi
+    mov pol_f_deriv_address, rdx
+    ;calling calcF(pol_f,z)
+    fld z_real
+    fstp second_real
+    fld z_img
+    fstp second_img
+    lea rdi,[rbp-0x38]      ; setting return address for calcF (z_f)
+    call calcF
+    ; calling calcF(pol_f_deriv,z)
+    mov rsi, pol_f_deriv_address
+    lea rdi, [rbp-0x58] ; setting return address for calcF (z_f_deriv)
+    call calcF
+    ;calling divide(z_f, z_f_deriv)
+    fld z_f_deriv_real
+    fstp first_real
+    fld z_f_deriv_img
+    fstp first_img
+    fld z_f_real
+    fstp second_real
+    fld z_f_img
+    fstp second_img
+    lea rdi,[rbp-0x78]  ; setting return value address for divide (quotient)
+    call divide
+    ;calling subtract(z, quotient)
+    fld z_real
+    fstp second_real
+    fld z_img
+    fstp second_img
+    fld quotient_real
+    fstp first_real
+    fld quotient_img
+    fstp first_img
+    mov rdi, return_address
+    call subtract
+    leave
+    ret
+    
+section .data
+epsilon_string:
+    db "epsilon = %Lf",10,0
+order_string:
+    db "order = %d",10,0
+coeff_string:
+    db "coeff %d = %Lf %Lf",10,0
+initial_string:
+    db "initial = %Lf %Lf",0
+fs_malloc_failed:
+	db "A call to malloc() failed", 10, 0
+section .bss
+treal:
+    resq 2
+timg:    
+    resq 2
+tcurrent:
+    resd 1
+epsilon:
+    resq 2
+section .text
+%xdefine initDataAdress qword [rbp-0x10]
+%xdefine polAddress qword [rbp-0x20]
+%xdefine coeffsAddress qword[rbp-0x30]
+%xdefine indexLoop dword[rbp-0x40]
+readInput:
+    enter 0x40,0
+    mov initDataAdress, rdi
+    mov polAddress, rsi
+    ;calling scanf for epsilon
+    mov rsi, epsilon
+    mov rdi, qword epsilon_string
+    mov rax,0
+    call scanf
+    mov rsi, initDataAdress
+    fld Tword [epsilon]
+    fstp Tword [rsi]
+    ;calling scanf for order
+    mov rdi, qword order_string
+    mov rsi, polAddress
+    mov rax, 2
+    call scanf
+    mov rdi, polAddress
+    mov edi,dword [rdi]
+    add edi, 1
+    mov esi, 0x20
+    call calloc
+    cmp rax, 0
+    je .malloc_failed
+    
+    mov rdx, polAddress
+    mov [rdx+8], rax    ;pol->coeff assignment
+    mov coeffsAddress, rax
+    mov rcx, polAddress
+    mov ecx,dword [rcx]
+    inc ecx
+    mov indexLoop, ecx
+    .myloop:
+    ;preparing scanf
+        mov rdi, qword coeff_string
+        mov rsi, qword tcurrent
+        mov rcx, qword timg
+        mov rdx, qword treal
+        xor rax, rax
+        call scanf
+        mov rax, polAddress
+        mov rax, [eax+8]
+        mov edx, dword [tcurrent]
+        movsxd rdx,edx
+        shl rdx,5
+        add rax,rdx
+        fld Tword [treal]
+        fstp Tword [rax]
+        fld Tword [timg]
+        fstp Tword [rax+0x10]
+        dec indexLoop
+        cmp indexLoop,0
+        jg .myloop
+    mov rdi, initial_string
+    mov rsi, initDataAdress
+    lea rsi, [rsi+0x10]
+    lea rdx, [rsi+0x10]
+    xor rax,rax
+    call scanf
+    leave 
+    ret
+.malloc_failed:
+    mov rdi, fs_malloc_failed
+    mov rax, 0
+    call printf
+    leave 
+    ret
+        
     
     
-
     
-
+    
     
