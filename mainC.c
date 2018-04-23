@@ -104,46 +104,45 @@ void printPolynom(polynom *pol) {
     printf("\n");
 }
 
-//void readInput(initData *init, polynom *pol) {
-//    scanf("epsilon = %Lf\n", &init->epsilon);
-//    scanf("order = %d\n", &pol->order);
-//    pol->coeffs = calloc((size_t) pol->order + 1, sizeof(complexNumber));
-//    for (int i = 0; i <= pol->order; i++) {
-//        int current = 0;
-//        long double real = 0;
-//        long double img = 0;
-//        scanf("coeff %d = %Lf %Lf\n", &current, &real, &img);
-//        pol->coeffs[current].real = real;
-//        pol->coeffs[current].imagine = img;
-//    }
-//    scanf("initial = %Lf %Lf", &init->initial.real, &init->initial.imagine);
-//}
+// void readInput(initData *init, polynom *pol) {
+//     scanf("epsilon = %Lf\n", &init->epsilon);
+//     scanf("order = %d\n", &pol->order);
+//     pol->coeffs = calloc((size_t) pol->order + 1, sizeof(complexNumber));
+//     for (int i = 0; i <= pol->order; i++) {
+//         int current = 0;
+//         long double real = 0;
+//         long double img = 0;
+//         scanf("coeff %d = %Lf %Lf\n", &current, &real, &img);
+//         pol->coeffs[current].real = real;
+//         pol->coeffs[current].imagine = img;
+//     }
+//     scanf("initial = %Lf %Lf", &init->initial.real, &init->initial.imagine);
+// }
 
-int main(int argc, char *argv[]) {
-    initData* init = calloc(1, sizeof(initData));
-    polynom* pol_f = calloc(1, sizeof(polynom));
+// int main(int argc, char *argv[]) {
+//     initData* init = calloc(1, sizeof(initData));
+//     polynom* pol_f = calloc(1, sizeof(polynom));
 
-    readInput(init, pol_f);
+//     readInput(init, pol_f);
 
-    // printf("epsilon: %lf\ninitial: ", init->epsilon);
-    // printNumber(init->initial);
-    // printf("\norder: %d\n", pol_f->order);
-    // printPolynom(pol_f);
+//     // printf("epsilon: %lf\ninitial: ", init->epsilon);
+//     // printNumber(init->initial);
+//     // printf("\norder: %d\n", pol_f->order);
+//     // printPolynom(pol_f);
 
-	polynom* pol_f_deriv = getDeriv(pol_f);
-    complexNumber z = init->initial;
+// 	polynom* pol_f_deriv = getDeriv(pol_f);
+//     complexNumber z = init->initial;
 
+//     //printPolynom(pol_f_deriv);
 
-    //printPolynom(pol_f_deriv);
-
-    z = getNextZ(z, pol_f, pol_f_deriv);
-	while (!checkAcc(init, pol_f, z)){
-        z = getNextZ(z, pol_f, pol_f_deriv);
-    }
-    free(init);
-    free(pol_f->coeffs);
-    free(pol_f);
-    free(pol_f_deriv->coeffs);
-    free(pol_f_deriv);
-    printf("root = %.*Le %.*Le\n", 17, z.real, 17, z.imagine);
-}
+//     z = getNextZ(z, pol_f, pol_f_deriv);
+// 	while (!checkAcc(init, pol_f, z)){
+//         z = getNextZ(z, pol_f, pol_f_deriv);
+//     }
+//     free(init);
+//     free(pol_f->coeffs);
+//     free(pol_f);
+//     free(pol_f_deriv->coeffs);
+//     free(pol_f_deriv);
+//     printf("root = %.*Le %.*Le\n", 17, z.real, 17, z.imagine);
+// }
