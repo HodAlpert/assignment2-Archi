@@ -1,8 +1,15 @@
-; 
+
+
+%macro check_malloc 0 
+jne %%skip
+call malloc_failed
+%%skip:
+%endmacro
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; 	
 section .data
-	printResult: DB "root = %.*Le %.*Le",10,0 
+	printResult: DB "root = %.*Le %.*Le",10,0
+	printDividedByZero: DB "Divided by zero",10,0
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; 
 section .bss
@@ -18,15 +25,15 @@ section .text
     global subtract
     global mult
     global main
-    extern calloc
-    extern scanf
-    extern printf
     global readInput
     global getDeriv
     global getNextZ
-;   extern getDeriv
-;   extern checkAcc
-;   extern printNumber
+    global malloc_failed
+
+    extern calloc
+    extern free
+    extern scanf
+    extern printf
 
 %xdefine arg_z_real Tword [rbp-0x80]
 %xdefine arg_z_img Tword [rbp-0x70]
@@ -43,10 +50,13 @@ main:
 enter 0x80,0 ;allocate space for local variables
 
     ;calloc for initDate (1,48)
-    mov rdi,0x1
+    mov rdi, 0x1
     mov rsi, 0x30
     mov rax, 0
     call calloc
+    cmp rax, 0
+	check_malloc
+
     mov qword init_address, rax ;init*
 
     ;calloc for pol_f (1,16)
@@ -54,6 +64,9 @@ enter 0x80,0 ;allocate space for local variables
     mov rsi,0x10
     mov rax, 0
     call calloc
+    cmp rax, 0
+	check_malloc
+
     mov qword pol_f_address, rax ;pol_f* 
 
 	;readInput(init*, pol*)
@@ -83,10 +96,7 @@ enter 0x80,0 ;allocate space for local variables
     push qword [rbp-0x40]
     push qword [rbp-0x48]
     push qword [rbp-0x50]
-    ; fld Tword result_z_real ;the next z
-    ; fstp Tword arg_z_real
-    ; fld Tword result_z_img
-    ; fstp Tword arg_z_img
+    
    	
     mov rsi, qword pol_f_address
     mov rdx, qword pol_f_deriv_address
@@ -100,11 +110,7 @@ enter 0x80,0 ;allocate space for local variables
     push qword [rbp-0x40]
     push qword [rbp-0x48]
     push qword [rbp-0x50]
-    ; finit
-    ; fld Tword result_z_real ;the next z
-    ; fstp Tword arg_z_real
-    ; fld Tword result_z_img
-    ; fstp Tword arg_z_img
+    
    
     mov rsi, pol_f_address
     call calcF
@@ -131,30 +137,27 @@ enter 0x80,0 ;allocate space for local variables
     fstp Tword [rsp]
     lea rsp, [rsp-0x10]
     fstp Tword [rsp]
-    
-    ; finit
-    ; fld Tword f_z_real ;load real
-    ; fld st0 ;load real again
-    ; fmul ; real^2
-    ; fld Tword f_z_img ;load imagine
-    ; fld st0 ;laod imagine again
-    ; fmul ;imagine^2
-    ; fadd ; (imagine^2 + real^2)
-    ; ;fsqrt ; ||z||
-    ; mov rax, qword init_address
-    ; fld Tword [rax] ; load epsilon
-    ; fld st0 
-    ; fmul ;epsilon^2
-    
-
-    ;fcomi
-    ;jle .loop
 	
     mov rsi, 0x11
     mov rdx, 0x11
     mov rax, 0
     mov rdi, printResult
     call printf
+
+    mov rdi, init_address
+    call free
+
+    mov rbx, pol_f_address
+    mov rdi, [rbx+0x8]
+    call free
+    mov rdi, rbx
+    call free
+
+    mov rbx, pol_f_deriv_address
+    mov rdi, [rbx+0x8]
+    call free
+    mov rdi, rbx
+    call free
 
     leave
     ret
@@ -324,7 +327,14 @@ divide:
     fstp Tword [rbp-0x10]; saving dividend.img
     call squareAbs
     sub rsp, 0x50
+
+    fldz ;check if dividing by zero
+    fcomi
+    je .divided_by_zero
+    fstp Tword [rbp-0x10]
+    
     fstp Tword [rbp-0x10]       ;[rbp-0x10] <- absolute
+
     fld Tword [rbp+0x40]
     fld1
     fldz
@@ -351,6 +361,15 @@ divide:
     fstp Tword [rdi+0x10] ;saving result.real
     leave
     ret
+
+
+.divided_by_zero:
+
+	mov rdi, printDividedByZero
+	mov rax, 0
+	call printf
+	mov rax, 60
+	syscall
     
 
 %xdefine address_of_the_return_value qword [rbp-0x8]
@@ -457,6 +476,9 @@ getDeriv:
     mov rsi,0x10
     mov rax, 0
     call calloc
+    cmp rax, 0
+	check_malloc
+    
     mov qword pol_f_deriv_address, rax ;pol_f*
 
     ;calloc for pol_f_deriv->coeffs (pol_f->order, 32)
@@ -466,6 +488,9 @@ getDeriv:
     mov rdi, rax
     mov rsi, 0x20
     call calloc
+    cmp rax, 0
+	check_malloc
+
     mov rdx, pol_f_deriv_address
     mov dword [rdx], 0x0 ;set pol_f_deriv->order = 0
     mov [rdx+0x8], rax ;pol_f_deriv->coeffs
@@ -637,7 +662,7 @@ readInput:
     mov esi, 0x20
     call calloc
     cmp rax, 0
-    je .malloc_failed
+	check_malloc
     
     mov rdx, polAddress
     mov [rdx+8], rax    ;pol->coeff assignment
@@ -675,14 +700,10 @@ readInput:
     call scanf
     leave 
     ret
-.malloc_failed:
+
+malloc_failed:
     mov rdi, fs_malloc_failed
     mov rax, 0
     call printf
-    leave 
-    ret
-
-    
-    
-    
-    
+    mov rax, 60
+    syscall

@@ -1,5 +1,5 @@
 all: main.o mainC.o
-	gcc -g -Wall -o calc main.o mainC.o -lm
+	gcc -g -Wall -o root main.o mainC.o -lm
 
 main.o: main.s mainC.o header.h
 	nasm -g -f elf64 -w+all -o main.o main.s
@@ -10,4 +10,4 @@ mainC.o: mainC.c header.h
 .PHONY: clean
 
 clean:
-	rm -f *.o calc
+	rm -f *.o root
