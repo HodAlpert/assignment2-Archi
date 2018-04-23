@@ -22,10 +22,11 @@ section .text
     extern scanf
     extern printf
     global readInput
-    extern getDeriv
+    global getDeriv
     global getNextZ
-;     extern checkAcc
-;     extern printNumber
+;   extern getDeriv
+;   extern checkAcc
+;   extern printNumber
 
 %xdefine arg_z_real Tword [rbp-0x80]
 %xdefine arg_z_img Tword [rbp-0x70]
@@ -439,6 +440,92 @@ calcF:
         fstp Tword [rdi+0x10]
         leave
         ret
+
+
+%xdefine index dword [rbp-0x20]
+%xdefine pol_f_address qword [rbp-0x18]
+;%xdefine index qword [rbp-0x10]
+%xdefine pol_f_deriv_address qword [rbp-0x8]
+
+getDeriv:
+
+	enter 0x20, 0
+	mov pol_f_address, rdi
+
+	;calloc for pol_f_deriv (1,16)
+    mov rdi,0x1
+    mov rsi,0x10
+    mov rax, 0
+    call calloc
+    mov qword pol_f_deriv_address, rax ;pol_f*
+
+    ;calloc for pol_f_deriv->coeffs (pol_f->order, 32)
+    mov rax, qword pol_f_address
+    mov eax, dword [rax]
+    cdqe ;convert dword to qword RAX = sign extend of EAX
+    mov rdi, rax
+    mov rsi, 0x20
+    call calloc
+    mov rdx, pol_f_deriv_address
+    mov dword [rdx], 0x0 ;set pol_f_deriv->order = 0
+    mov [rdx+0x8], rax ;pol_f_deriv->coeffs
+
+    mov rax, pol_f_address
+    mov edx, dword [rax] ;pol_f->order
+
+    cmp edx, 0x0
+    je .order_is_zero ; if order = 0, we are done
+    
+    sub edx, 0x1 ;possible without lea?
+    mov rax, pol_f_deriv_address
+    mov dword [rax], edx ;pol_f_deriv->order = pol_f->order-1
+
+    mov dword index, 0x0 ; set loop-index to 0
+
+.forLoop:
+	
+	mov rax, pol_f_deriv_address 
+	mov rax, [rax + 0x8] ;pol_f_deriv->coeffs*
+	movsxd rdx, dword index 
+	shl rdx, 0x5
+	add rdx, rax ;pol_f_deriv->coeffs + 0x20*index (32=2^5 = 0x20)
+	
+	mov rax, pol_f_address 
+	mov rax, [rax + 0x8] ;pol_f->coeffs*
+	movsxd rcx, dword index
+	add rcx, 0x1 
+	shl rcx, 0x5
+	add rcx, rax ;pol_f->coeffs +1 + 0x20*index
+
+	finit
+	fld Tword [rcx] ;load pol_f->coeff[index+1].real
+	mov eax, dword index
+	fild dword index
+	fld1
+	fadd ;index+1
+	fmul 
+	fstp Tword [rdx] ;pol_f->coeff[index+1].real*(index+1)
+	
+	fld Tword [rcx+0x10] ;load pol_f->coeff[index+1].image
+	mov eax, dword index
+	fild dword index
+	fld1
+	fadd ;index+1
+	fmul 
+	fstp Tword [rdx+0x10] ;pol_f->coeff[index+1].image*(index+1)
+
+	add dword index, 0x1
+
+	mov r8, qword pol_f_address
+	mov eax, dword [r8]
+	cmp eax, dword index ;if pol_f->order <= loop-index, continue loop
+	jg .forLoop
+
+.order_is_zero:
+
+	mov rax, pol_f_deriv_address
+	leave
+	ret
         
 %xdefine z_real Tword [rbp+0x10]
 %xdefine z_img Tword [rbp+0x20]
@@ -520,11 +607,13 @@ tcurrent:
     resd 1
 epsilon:
     resq 2
+
 section .text
 %xdefine initDataAdress qword [rbp-0x10]
 %xdefine polAddress qword [rbp-0x20]
 %xdefine coeffsAddress qword[rbp-0x30]
 %xdefine indexLoop dword[rbp-0x40]
+
 readInput:
     enter 0x40,0
     mov initDataAdress, rdi
@@ -592,8 +681,7 @@ readInput:
     call printf
     leave 
     ret
-        
-    
+
     
     
     

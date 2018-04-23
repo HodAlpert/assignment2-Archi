@@ -13,16 +13,16 @@
 //   return z;
 //}
 
-polynom* getDeriv(polynom* pol){
-    polynom* newPolynom = calloc(1, sizeof(polynom));
-    newPolynom->coeffs = calloc((size_t)pol->order, sizeof(complexNumber));
-    newPolynom->order = pol->order-1;
-    for (int i = 0; i < pol->order; i++){
-        newPolynom->coeffs[i].real = pol->coeffs[i+1].real*(i+1);
-        newPolynom->coeffs[i].imagine = pol->coeffs[i+1].imagine*(i+1);
-    }
-    return newPolynom;
-}
+// polynom* getDeriv(polynom* pol_f){
+//     polynom* pol_f_deriv = calloc(1, sizeof(polynom));
+//     pol_f_deriv->coeffs = calloc((size_t)pol_f->order, sizeof(complexNumber));
+//     pol_f_deriv->order = pol_f->order-1;
+//     for (int i = 0; i < pol_f->order; i++){
+//         pol_f_deriv->coeffs[i].real = pol_f->coeffs[i+1].real*(i+1);
+//         pol_f_deriv->coeffs[i].imagine = pol_f->coeffs[i+1].imagine*(i+1);
+//     }
+//     return pol_f_deriv;
+// }
 
 //complexNumber mult(complexNumber first, complexNumber second) {
 //    complexNumber result = {0.0,0.0};
