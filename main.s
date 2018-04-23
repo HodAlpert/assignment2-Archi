@@ -27,15 +27,15 @@ section .text
 ;     extern checkAcc
 ;     extern printNumber
 
-%xdefine init_address qword [rbp-0x8]
-%xdefine pol_f_address qword [rbp-0x10]
-%xdefine pol_f_deriv_address qword [rbp-0x18]
-%xdefine result_z_img Tword [rbp-0x30] 
-%xdefine result_z_real Tword [rbp-0x40]
-%xdefine f_z_img Tword [rbp-0x50]
-%xdefine f_z_real Tword [rbp-0x60]
-%xdefine arg_z_img Tword [rbp-0x70]
 %xdefine arg_z_real Tword [rbp-0x80]
+%xdefine arg_z_img Tword [rbp-0x70]
+%xdefine init_address qword [rbp-0x68]
+%xdefine pol_f_address qword [rbp-0x60]
+%xdefine pol_f_deriv_address qword [rbp-0x58]
+%xdefine result_z_real Tword [rbp-0x50]
+%xdefine result_z_img Tword [rbp-0x40] 
+%xdefine f_z_real Tword [rbp-0x30]
+%xdefine f_z_img Tword [rbp-0x20]
 
 main:
 
@@ -76,50 +76,79 @@ enter 0x80,0 ;allocate space for local variables
 .loop:
 
     ;getNextZ(z, pol_f*, pol_f_deriv)
-    lea rdi, [rbp-0x40] ;result in rdi
+    lea rdi, [rbp-0x50] ;result in rdi
 
-    fld Tword result_z_real ;the next z
-    fstp Tword arg_z_real
-    fld Tword result_z_img
-    fstp Tword arg_z_img
+    push qword [rbp-0x38]
+    push qword [rbp-0x40]
+    push qword [rbp-0x48]
+    push qword [rbp-0x50]
+    ; fld Tword result_z_real ;the next z
+    ; fstp Tword arg_z_real
+    ; fld Tword result_z_img
+    ; fstp Tword arg_z_img
    	
     mov rsi, qword pol_f_address
     mov rdx, qword pol_f_deriv_address
     call getNextZ
-
-    finit
-    fld Tword result_z_real ;the next z
-    fstp Tword arg_z_real
-    fld Tword result_z_img
-    fstp Tword arg_z_img
-   
+    
     ;calcF(pol_f*, z)
-    lea rdi, [rbp-0x60] ;return address for calcF
+    lea rdi, [rbp-0x30] ;return address for calcF
+    
+    add rsp, 0x20
+    push qword [rbp-0x38]
+    push qword [rbp-0x40]
+    push qword [rbp-0x48]
+    push qword [rbp-0x50]
+    ; finit
+    ; fld Tword result_z_real ;the next z
+    ; fstp Tword arg_z_real
+    ; fld Tword result_z_img
+    ; fstp Tword arg_z_img
+   
     mov rsi, pol_f_address
     call calcF
 
-    finit
-    fld Tword f_z_real ;load real
-    fld st0 ;load real again
-    fmul ; real^2
-    fld Tword f_z_img ;load imagine
-    fld st0 ;laod imagine again
-    fmul ;imagine^2
-    fadd ; (imagine^2 + real^2)
-    fsqrt ; ||z||
+    add rsp, 0x20
+    push qword [rbp-0x18]
+    push qword [rbp-0x20]
+    push qword [rbp-0x28]
+    push qword [rbp-0x30]
+    
+    call squareAbs
+    add rsp, 0x20
     mov rax, qword init_address
-    fld Tword [rax] ; load epsilon
-    fcomi
-    jle .loop
+    fld Tword [rax] ;load epsilon
+    fld st0
+    fmul ;epsilon^2
+    fucomi ; epsilon^2 < 
+    jb .loop ;if (CF=1)
 
-  ;   fld Tword z_img
-  ;   fld Tword z_real
-  ;   fxch st1
-  ;   lea rsp, [rsp-0x10]
-  ;   fstp Tword [rsp]
-  ;   lea rsp, [rsp-0x10]
-  ;   fstp Tword [rsp]
-  	
+    fld Tword result_z_real
+    fld Tword result_z_img
+    
+    lea rsp, [rsp-0x10]
+    fstp Tword [rsp]
+    lea rsp, [rsp-0x10]
+    fstp Tword [rsp]
+    
+    ; finit
+    ; fld Tword f_z_real ;load real
+    ; fld st0 ;load real again
+    ; fmul ; real^2
+    ; fld Tword f_z_img ;load imagine
+    ; fld st0 ;laod imagine again
+    ; fmul ;imagine^2
+    ; fadd ; (imagine^2 + real^2)
+    ; ;fsqrt ; ||z||
+    ; mov rax, qword init_address
+    ; fld Tword [rax] ; load epsilon
+    ; fld st0 
+    ; fmul ;epsilon^2
+    
+
+    ;fcomi
+    ;jle .loop
+	
     mov rsi, 0x11
     mov rdx, 0x11
     mov rax, 0
@@ -129,7 +158,6 @@ enter 0x80,0 ;allocate space for local variables
     leave
     ret
 
-; ;assuming xmm0=first.real, xmm1 = first.img, xmm2 = second.real, xmm3 = second.img
 
 mult:
 ;assuming first.real in [rbp+0x10]

@@ -34,8 +34,6 @@ polynom* getDeriv(polynom* pol);
 
 extern complexNumber getNextZ(complexNumber z, polynom* pol_f, polynom* pol_f_deriv);
 
-
-int checkAcc(initData* init, polynom* pol, complexNumber z); //checking the root
 extern long double squareAbs(complexNumber z);//?? not neccesery ??
 
 //arithmetic operations

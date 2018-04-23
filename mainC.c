@@ -71,10 +71,6 @@ polynom* getDeriv(polynom* pol){
 //    return z.real*z.real + z.imagine *z.imagine;
 //}
 
-int checkAcc(initData *init, polynom *pol, complexNumber z) {
-    return ( squareAbs(calcF(pol,z)) < (init->epsilon*init->epsilon) );
-}
-
 //complexNumber calcF(polynom *pol, complexNumber z) {
 //    complexNumber result={0.0,0.0};
 //    for(int i = 0; i <= pol->order; i++){
@@ -132,13 +128,16 @@ void printPolynom(polynom *pol) {
 
 // 	polynom* pol_f_deriv = getDeriv(pol_f);
 //     complexNumber z = init->initial;
+//     complexNumber z_f;
 
 //     //printPolynom(pol_f_deriv);
 
-//     z = getNextZ(z, pol_f, pol_f_deriv);
-// 	while (!checkAcc(init, pol_f, z)){
+//     do{
 //         z = getNextZ(z, pol_f, pol_f_deriv);
-//     }
+//         z_f = calcF(pol_f, z);
+
+//     }while( squareAbs(z_f) > (init->epsilon*init->epsilon) );
+	
 //     free(init);
 //     free(pol_f->coeffs);
 //     free(pol_f);
